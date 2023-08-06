@@ -2,25 +2,18 @@ package com.example.Spring6webapp.Bootstrap;
 
 import com.example.Spring6webapp.domain.Author;
 import com.example.Spring6webapp.domain.Book;
-import com.example.Spring6webapp.domain.Publisher;
 import com.example.Spring6webapp.repositories.AuthorRepository;
 import com.example.Spring6webapp.repositories.BookRepository;
-import com.example.Spring6webapp.repositories.PublisherRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class BootstrapData implements CommandLineRunner {
 
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
-    private final PublisherRepository publisherRepository;
-
-    public BootstrapData(AuthorRepository authorRepository, BookRepository bookRepository, PublisherRepository publisherRepository) {
-        this.authorRepository = authorRepository;
-        this.bookRepository = bookRepository;
-        this.publisherRepository = publisherRepository;
-    }
 
     @Override
     public void run(String... args) throws Exception {
@@ -46,19 +39,10 @@ public class BootstrapData implements CommandLineRunner {
         Author author1Saved = authorRepository.save(author1);
         Book book1Saved = bookRepository.save(book1);
 
-        Publisher publisher = new Publisher();
-        publisher.setPublisherName("SFG Publishing");
-        publisher.setCity("St Petersburg");
-        publisher.setState("FL");
-        Publisher publisherSaved = publisherRepository.save(publisher);
-
         authorSaved.getBooks().add(bookSaved);
         author1Saved.getBooks().add(book1Saved);
         bookSaved.getAuthors().add(authorSaved);
         book1Saved.getAuthors().add(author1Saved);
-
-        bookSaved.setPublisher(publisherSaved);
-        book1Saved.setPublisher(publisherSaved);
 
         authorRepository.save(authorSaved);
         authorRepository.save(author1Saved);
@@ -68,6 +52,5 @@ public class BootstrapData implements CommandLineRunner {
         System.out.println("In Bootstrap");
         System.out.println("Author count: " + authorRepository.count());
         System.out.println("Book count: " + bookRepository.count());
-        System.out.println("Publisher count: " + publisherRepository.count());
     }
 }

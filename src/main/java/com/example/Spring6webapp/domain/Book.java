@@ -25,9 +25,6 @@ public class Book {
     @ToString.Exclude
     private Set<Author> authors = new HashSet<>();
 
-    @ManyToOne
-    private Publisher publisher;
-
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;
