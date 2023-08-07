@@ -5,12 +5,17 @@
     <title>Create new Author</title>
 </head>
 <body>
-  <form th:action="@{/authors/create-new}" th:object="${author}" method="post">
+<form th:action="@{/authors/create-new}" th:object="${author}" method="post">
     <label for="firstName">First name:</label>
     <input id="firstName" type="text" th:field="*{firstName}">
 
     <label for="lastName">Last name:</label>
     <input id="lastName" type="text" th:field="*{lastName}">
+
+    <label for="dateOfBirth">Date of Birth:</label>
+    <input id="dateOfBirth" type="date" th:field="*{dateOfBirth}">
+
+    <input type="submit">
   </form>
 </body>
 </html>

@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 @RequiredArgsConstructor
@@ -21,9 +23,16 @@ public class AuthorController {
     }
 
     @GetMapping("/authors/create-new")
-    public String createNewAuthor(Model model) {
+    public String createNewAuthorForm(Model model) {
         model.addAttribute("author", new Author());
 
         return "author/create";
+    }
+
+    @PostMapping("/authors/create-new")
+    public String createNewAuthor(@ModelAttribute Author author) {
+        authorService.createNewAuthor(author);
+
+        return "redirect:/authors";
     }
 }
