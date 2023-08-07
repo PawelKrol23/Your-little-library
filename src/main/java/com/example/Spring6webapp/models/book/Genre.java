@@ -1,7 +1,12 @@
 package com.example.Spring6webapp.models.book;
 
 public enum Genre {
-    ROMANCE;
+    ROMANCE,
+    FANTASY,
+    THRILLER,
+    MYSTERY,
+    HORROR,
+    FICTION;
 
     public String capitalizedName() {
         char[] chars = this.name().toCharArray();
