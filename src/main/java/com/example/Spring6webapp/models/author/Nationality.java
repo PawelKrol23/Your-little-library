@@ -8,7 +8,8 @@ import lombok.RequiredArgsConstructor;
 public enum Nationality {
 
     UNITED_KINGDOM("\uD83C\uDDEC\uD83C\uDDE7"),
-    GERMAN("\uD83C\uDDE9\uD83C\uDDEA");
+    GERMAN("\uD83C\uDDE9\uD83C\uDDEA"),
+    AMERICAN("\uD83C\uDDFA\uD83C\uDDF8");
 
     private final String utfFlag;
 
