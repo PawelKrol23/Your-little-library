@@ -1,6 +1,6 @@
 package com.example.Spring6webapp.services;
 
-import com.example.Spring6webapp.domain.Book;
+import com.example.Spring6webapp.models.Book;
 import com.example.Spring6webapp.repositories.BookRepository;
 import org.springframework.stereotype.Service;
 

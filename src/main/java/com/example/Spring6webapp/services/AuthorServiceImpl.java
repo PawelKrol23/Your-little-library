@@ -1,6 +1,6 @@
 package com.example.Spring6webapp.services;
 
-import com.example.Spring6webapp.domain.Author;
+import com.example.Spring6webapp.models.Author;
 import com.example.Spring6webapp.repositories.AuthorRepository;
 import org.springframework.stereotype.Service;
 

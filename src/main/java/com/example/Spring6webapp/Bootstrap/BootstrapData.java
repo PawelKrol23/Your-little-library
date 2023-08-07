@@ -1,7 +1,7 @@
 package com.example.Spring6webapp.Bootstrap;
 
-import com.example.Spring6webapp.domain.Author;
-import com.example.Spring6webapp.domain.Book;
+import com.example.Spring6webapp.models.Author;
+import com.example.Spring6webapp.models.Book;
 import com.example.Spring6webapp.repositories.AuthorRepository;
 import com.example.Spring6webapp.repositories.BookRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,10 +1,9 @@
-package com.example.Spring6webapp.domain;
+package com.example.Spring6webapp.models;
 
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -16,17 +15,17 @@ import java.util.Set;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Author {
+public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String firstName;
-    private String lastName;
-    private LocalDate dateOfBirth;
-
-    @ManyToMany(mappedBy = "authors")
+    private String title;
+    private String isbn;
+    @ManyToMany
+    @JoinTable(name = "author_book", joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "author_id"))
     @ToString.Exclude
-    private Set<Book> books = new HashSet<>();
+    private Set<Author> authors = new HashSet<>();
 
     @Override
     public final boolean equals(Object o) {
@@ -35,8 +34,8 @@ public class Author {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Author author = (Author) o;
-        return getId() != null && Objects.equals(getId(), author.getId());
+        Book book = (Book) o;
+        return getId() != null && Objects.equals(getId(), book.getId());
     }
 
     @Override
