@@ -19,6 +19,6 @@ public class BookController {
 
         model.addAttribute("books", bookService.findAll());
 
-        return "book/books";
+        return "book/list";
     }
 }
