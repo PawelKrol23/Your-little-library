@@ -1,5 +1,6 @@
-package com.example.Spring6webapp.models;
+package com.example.Spring6webapp.models.author;
 
+import com.example.Spring6webapp.models.book.Book;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;

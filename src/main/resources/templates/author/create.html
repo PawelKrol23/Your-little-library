@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create new Author</title>
+</head>
+<body>
+  <form th:action="@{/authors/create-new}" th:object="${author}" method="post">
+    <label for="firstName">First name:</label>
+    <input id="firstName" type="text" th:field="*{firstName}">
+
+    <label for="lastName">Last name:</label>
+    <input id="lastName" type="text" th:field="*{lastName}">
+  </form>
+</body>
+</html>
