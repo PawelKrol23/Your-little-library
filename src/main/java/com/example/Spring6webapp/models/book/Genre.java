@@ -1,16 +1,7 @@
-package com.example.Spring6webapp.models.author;
+package com.example.Spring6webapp.models.book;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
-@Getter
-public enum Nationality {
-
-    UNITED_KINGDOM("\uD83C\uDDEC\uD83C\uDDE7"),
-    GERMAN("\uD83C\uDDE9\uD83C\uDDEA");
-
-    private final String utfFlag;
+public enum Genre {
+    ROMANCE;
 
     public String capitalizedName() {
         char[] chars = this.name().toCharArray();

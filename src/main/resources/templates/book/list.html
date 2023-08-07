@@ -11,10 +11,14 @@
     <tr>
         <th>ID</th>
         <th>Title</th>
+        <th>Genre</th>
+        <th>Publication Year</th>
     </tr>
     <tr th:each="book : ${books}">
         <th th:text="${book.id}">ID</th>
         <th th:text="${book.title}">Title</th>
+        <th th:text="${book.genre.capitalizedName()}"></th>
+        <th th:text="${book.publicationYear}"></th>
     </tr>
 </table>
 </body>

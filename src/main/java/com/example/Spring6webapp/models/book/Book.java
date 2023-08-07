@@ -5,9 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -18,15 +18,17 @@ import java.util.Set;
 @Builder
 public class Book {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-    private String isbn;
+    private Genre genre;
+    private Integer publicationYear;
     @ManyToMany
     @JoinTable(name = "author_book", joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "author_id"))
     @ToString.Exclude
-    private Set<Author> authors = new HashSet<>();
+    @Builder.Default
+    private List<Author> authors = new ArrayList<>();
 
     @Override
     public final boolean equals(Object o) {

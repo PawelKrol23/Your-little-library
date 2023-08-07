@@ -16,10 +16,10 @@
     <th>Book Count</th>
   </tr>
   <tr th:each="author : ${authors}">
-    <th th:text="${author.id}">ID</th>
+    <th th:text="*{author.id}">ID</th>
     <th th:text="${author.firstName}">First Name</th>
     <th th:text="${author.lastName}">Last Name</th>
-    <th th:text="${author.nationality.getUtfFlag() + ' ' + author.nationality.name().replace('_', ' ')}"></th>
+    <th th:text="${author.nationality.getUtfFlag() + ' ' + author.nationality.capitalizedName()}"></th>
     <th th:text="${author.books.size()}">Book count</th>
   </tr>
 </table>

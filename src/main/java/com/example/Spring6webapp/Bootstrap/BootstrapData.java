@@ -25,7 +25,6 @@ public class BootstrapData implements CommandLineRunner {
 
         Book book = new Book();
         book.setTitle("Domain Driven Design");
-        book.setIsbn("123456");
 
         Author authorSaved = authorRepository.save(author);
         Book bookSaved = bookRepository.save(book);
@@ -38,12 +37,11 @@ public class BootstrapData implements CommandLineRunner {
         Author author2 = new Author();
         author2.setFirstName("Paweł");
         author2.setLastName("Król");
-        author2.setNationality(Nationality.UNITED_KINGDOM);
+        author2.setNationality(Nationality.GERMAN);
         authorRepository.save(author2);
 
         Book book1 = new Book();
         book1.setTitle("J2EE Development without EJB");
-        book1.setIsbn("54757585");
 
         Author author1Saved = authorRepository.save(author1);
         Book book1Saved = bookRepository.save(book1);

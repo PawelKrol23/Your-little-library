@@ -6,9 +6,9 @@ import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.time.LocalDate;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -19,7 +19,7 @@ import java.util.Set;
 @Builder
 public class Author {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String firstName;
     private String lastName;
@@ -27,7 +27,8 @@ public class Author {
     private Nationality nationality;
     @ManyToMany(mappedBy = "authors")
     @ToString.Exclude
-    private Set<Book> books = new HashSet<>();
+    @Builder.Default
+    private List<Book> books = new ArrayList<>();
 
     @Override
     public final boolean equals(Object o) {
