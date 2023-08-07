@@ -24,7 +24,7 @@ public class Author {
     private String firstName;
     private String lastName;
     private LocalDate dateOfBirth;
-
+    private Nationality nationality;
     @ManyToMany(mappedBy = "authors")
     @ToString.Exclude
     private Set<Book> books = new HashSet<>();
