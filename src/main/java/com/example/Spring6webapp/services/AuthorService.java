@@ -6,5 +6,5 @@ public interface AuthorService {
 
     Iterable<Author> findAll();
 
-    Author createNewAuthor(Author author);
+    void createNewAuthor(Author author);
 }

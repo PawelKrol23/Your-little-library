@@ -2,6 +2,9 @@ package com.example.Spring6webapp.models.book;
 
 import com.example.Spring6webapp.models.author.Author;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
@@ -20,8 +23,11 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Size(min = 2, max = 120)
     private String title;
+    @NotNull
     private Genre genre;
+    @Max(2023)
     private Integer publicationYear;
     @ManyToMany
     @JoinTable(name = "author_book", joinColumns = @JoinColumn(name = "book_id"),
