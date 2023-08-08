@@ -2,8 +2,11 @@ package com.example.Spring6webapp.models.author;
 
 import com.example.Spring6webapp.models.book.Book;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -21,9 +24,14 @@ public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Size(min = 2, max = 70)
     private String firstName;
+    @Size(min = 2, max = 70)
     private String lastName;
+    @NotNull
+    @DateTimeFormat(pattern="yyyy-MM-dd")
     private LocalDate dateOfBirth;
+    @NotNull
     private Nationality nationality;
     @ManyToMany(mappedBy = "authors")
     @ToString.Exclude

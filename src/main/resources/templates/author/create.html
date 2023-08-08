@@ -8,12 +8,22 @@
 <form th:action="@{/authors/create-new}" th:object="${author}" method="post">
     <label for="firstName">First name:</label>
     <input id="firstName" type="text" th:field="*{firstName}">
+    <div style="color: red;" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
 
     <label for="lastName">Last name:</label>
     <input id="lastName" type="text" th:field="*{lastName}">
+    <div style="color: red;" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
 
     <label for="dateOfBirth">Date of Birth:</label>
     <input id="dateOfBirth" type="date" th:field="*{dateOfBirth}">
+    <div style="color: red;" th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}"></div>
+
+    <label for="nationality">Nationality:</label>
+    <select id="nationality" th:field="*{nationality}">
+        <option value="" selected>--- Choose an option ---</option>
+        <option th:each="nationality : ${nationalities}" th:text="${nationality.utfFlag + ' ' + nationality.capitalizedName()}" th:value="${nationality}"></option>
+    </select>
+    <div style="color: red;" th:if="${#fields.hasErrors('nationality')}" th:errors="*{nationality}"></div>
 
     <input type="submit">
   </form>
