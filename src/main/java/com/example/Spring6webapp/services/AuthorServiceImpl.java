@@ -5,6 +5,8 @@ import com.example.Spring6webapp.repositories.AuthorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class AuthorServiceImpl implements AuthorService {
@@ -19,5 +21,10 @@ public class AuthorServiceImpl implements AuthorService {
     public void createNewAuthor(Author author) {
         author.setId(null);
         authorRepository.save(author);
+    }
+
+    @Override
+    public Optional<Author> getAuthorById(Long authorId) {
+        return authorRepository.findById(authorId);
     }
 }
