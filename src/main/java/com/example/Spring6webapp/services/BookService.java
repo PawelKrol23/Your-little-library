@@ -7,7 +7,11 @@ import java.util.Optional;
 public interface BookService {
     Iterable<Book> findAll();
 
-    void createNewBook(Book book);
+    Book createNewBook(Book book);
 
     Optional<Book> getBookById(Long bookId);
+
+    Optional<Book> updateBookById(Book newBookData, Long bookId);
+
+    void deleteBookById(Long bookId);
 }

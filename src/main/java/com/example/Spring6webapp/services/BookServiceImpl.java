@@ -2,8 +2,10 @@ package com.example.Spring6webapp.services;
 
 import com.example.Spring6webapp.models.book.Book;
 import com.example.Spring6webapp.repositories.BookRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -19,13 +21,39 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void createNewBook(Book book) {
+    public Book createNewBook(Book book) {
         book.setId(null);
-        bookRepository.save(book);
+        return bookRepository.save(book);
     }
 
     @Override
     public Optional<Book> getBookById(Long bookId) {
         return bookRepository.findById(bookId);
+    }
+
+    @Override
+    @Transactional
+    public Optional<Book> updateBookById(Book newBookData, Long bookId) {
+        Optional<Book> optionalBook = bookRepository.findById(bookId);
+        if(optionalBook.isEmpty()) {
+            return Optional.empty();
+        }
+
+        Book bookToUpdate = optionalBook.get();
+        bookToUpdate.setTitle(newBookData.getTitle());
+        bookToUpdate.setGenre(newBookData.getGenre());
+        bookToUpdate.setPublicationYear(newBookData.getPublicationYear());
+        Book savedBook = bookRepository.save(bookToUpdate);
+
+        return Optional.of(savedBook);
+    }
+
+    @Override
+    public void deleteBookById(Long bookId) {
+        if(!bookRepository.existsById(bookId)) {
+            throw new EntityNotFoundException("No book with such Id");
+        }
+
+        bookRepository.deleteById(bookId);
     }
 }
