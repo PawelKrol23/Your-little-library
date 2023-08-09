@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${book.title}">Title</title>
+</head>
+<body>
+<h2>Book: </h2>
+<div th:text="*{book.id}">ID</div>
+<div th:text="${book.title}">First Name</div>
+<div th:text="${book.genre.capitalizedName()}">Last Name</div>
+<div th:text="${book.publicationYear}"></div>
+<h2>Authors: </h2>
+<div th:each="author : ${book.authors}">
+  <div th:text="${author.firstName}"></div>
+  <div th:text="${author.lastName}"></div>
+  <div th:text="${author.nationality.utfFlag + ' ' + author.nationality.capitalizedName()}"></div>
+  <div th:text="${author.dateOfBirth}"></div>
+</div>
+</body>
+</html>

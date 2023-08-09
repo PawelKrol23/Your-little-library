@@ -5,13 +5,12 @@ import com.example.Spring6webapp.models.book.Genre;
 import com.example.Spring6webapp.services.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @Controller
 @RequiredArgsConstructor
@@ -25,6 +24,16 @@ public class BookController {
         model.addAttribute("books", bookService.findAll());
 
         return "book/list";
+    }
+
+    @GetMapping("/books/{bookId}")
+    public String getSingleAuthor(@PathVariable Long bookId,
+                                  Model model) {
+        Book foundBook = bookService.getBookById(bookId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found"));
+        model.addAttribute("book", foundBook);
+
+        return "book/single";
     }
 
     @GetMapping("/books/create-new")

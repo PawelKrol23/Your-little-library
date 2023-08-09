@@ -47,12 +47,11 @@ public class AuthorController {
     }
 
     @PostMapping("/authors/create-new")
-    public String createNewAuthor(@Valid @ModelAttribute Author author,
+    public String createNewAuthor(@Valid @ModelAttribute("author") Author author,
                                   BindingResult result,
                                   Model model) {
         if(result.hasErrors()) {
             model.addAttribute("nationalities", Nationality.values());
-            model.addAttribute("author", author);
             return "author/create";
         }
 

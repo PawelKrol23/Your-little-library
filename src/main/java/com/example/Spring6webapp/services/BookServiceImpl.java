@@ -5,6 +5,8 @@ import com.example.Spring6webapp.repositories.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
@@ -20,5 +22,10 @@ public class BookServiceImpl implements BookService {
     public void createNewBook(Book book) {
         book.setId(null);
         bookRepository.save(book);
+    }
+
+    @Override
+    public Optional<Book> getBookById(Long bookId) {
+        return bookRepository.findById(bookId);
     }
 }
