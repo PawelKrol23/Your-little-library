@@ -55,7 +55,19 @@ public class AuthorController {
             return "author/create";
         }
 
-        authorService.createNewAuthor(author);
-        return "redirect:/authors";
+        Author createdAuthor = authorService.createNewAuthor(author);
+        return "redirect:/authors/%d".formatted(createdAuthor.getId());
+    }
+
+    @GetMapping("/authors/{authorId}/edit")
+    public String editAuthorForm(@PathVariable Long authorId,
+                                 Model model) {
+        Author foundAuthor = authorService.getAuthorById(authorId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found"));
+
+        model.addAttribute("author", foundAuthor);
+        model.addAttribute("nationalities", Nationality.values());
+
+        return "author/edit";
     }
 }

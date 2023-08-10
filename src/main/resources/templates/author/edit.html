@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${author.firstName + ' ' + author.lastName + ' - Edit'}"></title>
+</head>
+<body>
+<form th:action="@{/authors/{id}/edit(id=${authorId})}" th:object="${author}" th:method="put">
+  <label for="firstName">First name:</label>
+  <input id="firstName" type="text" th:field="*{firstName}">
+  <div style="color: red;" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+
+  <label for="lastName">Last name:</label>
+  <input id="lastName" type="text" th:field="*{lastName}">
+  <div style="color: red;" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+
+  <label for="dateOfBirth">Date of birth:</label>
+  <input id="dateOfBirth" type="date" th:field="*{dateOfBirth}">
+  <div style="color: red;" th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}"></div>
+
+  <label for="nationality">Nationality:</label>
+  <select id="nationality" th:field="*{nationality}">
+    <option value="" selected>--- Choose an option ---</option>
+    <option th:each="nationality : ${nationalities}" th:text="${nationality}" th:value="${nationality}"></option>
+  </select>
+  <div style="color: red;" th:if="${#fields.hasErrors('nationality')}" th:errors="*{nationality}"></div>
+  <button type="submit">Update Author</button>
+</form>
+
+<form th:action="@{/authors/{id}/edit(id=${authorId})}" th:method="delete">
+  <button type="submit">Delete Author</button>
+</form>
+</body>
+</html>

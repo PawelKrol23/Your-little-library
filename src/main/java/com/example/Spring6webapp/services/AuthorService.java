@@ -8,7 +8,7 @@ public interface AuthorService {
 
     Iterable<Author> findAll();
 
-    void createNewAuthor(Author author);
+    Author createNewAuthor(Author author);
 
     Optional<Author> getAuthorById(Long authorId);
 }
