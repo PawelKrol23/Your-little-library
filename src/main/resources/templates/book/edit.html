@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title th:text="${book.title + ' - Edit'}"></title>
+  <title>Edit book</title>
 </head>
 <body>
 <form th:action="@{/books/{id}/edit(id=${bookId})}" th:object="${book}" th:method="put">

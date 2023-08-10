@@ -11,4 +11,6 @@ public interface AuthorService {
     Author createNewAuthor(Author author);
 
     Optional<Author> getAuthorById(Long authorId);
+
+    Optional<Author> updateAuthorById(Author newAuthorData, Long authorId);
 }

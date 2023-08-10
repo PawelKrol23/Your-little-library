@@ -9,10 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @Controller
@@ -69,5 +66,21 @@ public class AuthorController {
         model.addAttribute("nationalities", Nationality.values());
 
         return "author/edit";
+    }
+
+    @PutMapping("/authors/{authorId}/edit")
+    public String updateAuthorById(@PathVariable Long authorId,
+                                   @Valid @ModelAttribute("author") Author author,
+                                   BindingResult result,
+                                   Model model) {
+        if(result.hasErrors()) {
+            model.addAttribute("nationalities", Nationality.values());
+            return "author/edit";
+        }
+
+        Author updatedAuthor = authorService.updateAuthorById(author, authorId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found"));
+
+        return "redirect:/authors/%d".formatted(updatedAuthor.getId());
     }
 }

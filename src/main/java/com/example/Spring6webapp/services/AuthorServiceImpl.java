@@ -20,12 +20,28 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public Author createNewAuthor(Author author) {
         author.setId(null);
-        Author createdAuthor = authorRepository.save(author);
-        return createdAuthor;
+        return authorRepository.save(author);
     }
 
     @Override
     public Optional<Author> getAuthorById(Long authorId) {
         return authorRepository.findById(authorId);
+    }
+
+    @Override
+    public Optional<Author> updateAuthorById(Author newAuthorData, Long authorId) {
+        Optional<Author> optionalAuthor = authorRepository.findById(authorId);
+        if(optionalAuthor.isEmpty()) {
+            return Optional.empty();
+        }
+
+        Author authorToUpdate = optionalAuthor.get();
+        authorToUpdate.setFirstName(newAuthorData.getFirstName());
+        authorToUpdate.setLastName(newAuthorData.getLastName());
+        authorToUpdate.setDateOfBirth(newAuthorData.getDateOfBirth());
+        authorToUpdate.setNationality(newAuthorData.getNationality());
+        Author savedAuthor = authorRepository.save(authorToUpdate);
+
+        return Optional.of(savedAuthor);
     }
 }
