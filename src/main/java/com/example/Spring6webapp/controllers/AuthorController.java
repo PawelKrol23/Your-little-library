@@ -3,6 +3,7 @@ package com.example.Spring6webapp.controllers;
 import com.example.Spring6webapp.models.author.Author;
 import com.example.Spring6webapp.models.author.Nationality;
 import com.example.Spring6webapp.services.AuthorService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -82,5 +83,17 @@ public class AuthorController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found"));
 
         return "redirect:/authors/%d".formatted(updatedAuthor.getId());
+    }
+
+    @DeleteMapping("/authors/{authorId}/edit")
+    public String deleteAuthorById(@PathVariable Long authorId) {
+
+        try {
+            authorService.deleteAuthorById(authorId);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Author already not exists");
+        }
+
+        return "redirect:/authors";
     }
 }

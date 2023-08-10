@@ -13,4 +13,6 @@ public interface AuthorService {
     Optional<Author> getAuthorById(Long authorId);
 
     Optional<Author> updateAuthorById(Author newAuthorData, Long authorId);
+
+    void deleteAuthorById(Long authorId);
 }

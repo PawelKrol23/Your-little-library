@@ -8,9 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Getter
@@ -28,13 +26,14 @@ public class Book {
     @NotNull
     private Genre genre;
     @Max(2023)
+    @NotNull
     private Integer publicationYear;
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(name = "author_book", joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "author_id"))
     @ToString.Exclude
     @Builder.Default
-    private List<Author> authors = new ArrayList<>();
+    private Set<Author> authors = new HashSet<>();
 
     @Override
     public final boolean equals(Object o) {

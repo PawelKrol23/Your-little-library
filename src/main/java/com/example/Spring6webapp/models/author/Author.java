@@ -9,9 +9,7 @@ import org.hibernate.proxy.HibernateProxy;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Getter
@@ -33,10 +31,17 @@ public class Author {
     private LocalDate dateOfBirth;
     @NotNull
     private Nationality nationality;
-    @ManyToMany(mappedBy = "authors")
+    @ManyToMany(mappedBy = "authors", cascade = CascadeType.PERSIST)
     @ToString.Exclude
     @Builder.Default
-    private List<Book> books = new ArrayList<>();
+    private Set<Book> books = new HashSet<>();
+
+    @PreRemove
+    private void removeBookAssociations() {
+        for (Book book: this.books) {
+            book.getAuthors().remove(this);
+        }
+    }
 
     @Override
     public final boolean equals(Object o) {

@@ -2,8 +2,10 @@ package com.example.Spring6webapp.services;
 
 import com.example.Spring6webapp.models.author.Author;
 import com.example.Spring6webapp.repositories.AuthorRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -43,5 +45,17 @@ public class AuthorServiceImpl implements AuthorService {
         Author savedAuthor = authorRepository.save(authorToUpdate);
 
         return Optional.of(savedAuthor);
+    }
+
+    @Override
+    @Transactional
+    public void deleteAuthorById(Long authorId) {
+        Optional<Author> optionalAuthor = authorRepository.findById(authorId);
+        if(optionalAuthor.isEmpty()) {
+            throw new EntityNotFoundException("No author with such Id");
+        }
+
+        Author foundAuthor = optionalAuthor.get();
+        authorRepository.delete(foundAuthor);
     }
 }
