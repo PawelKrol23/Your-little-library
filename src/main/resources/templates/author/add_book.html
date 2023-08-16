@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Add book to author</title>
+</head>
+<body>
+<h1 th:text="${'Add book to author ' + author.firstName + ' ' + author.lastName}"></h1>
+<h2>Choose book to add: </h2>
+<form th:each="book : ${books}" th:method="put" th:action="@{/authors/{authorId}/add-book/{bookId}(authorId=${authorId}, bookId=${book.id})}">
+  <div th:text="*{book.id}">ID</div>
+  <div th:text="${book.title}">First Name</div>
+  <div th:text="${book.genre.capitalizedName()}">Last Name</div>
+  <div th:text="${book.publicationYear}"></div>
+  <button type="submit">Add book to this author</button>
+</form>
+</body>
+</html>
