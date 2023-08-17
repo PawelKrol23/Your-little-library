@@ -89,4 +89,26 @@ public class AuthorServiceImpl implements AuthorService {
         bookRepository.save(foundBook);
         return Optional.of(authorRepository.save(foundAuthor));
     }
+
+    @Override
+    public Optional<Author> removeBookFromAuthor(Long bookId, Long authorId) {
+        Optional<Author> optionalAuthor = authorRepository.findById(authorId);
+        if(optionalAuthor.isEmpty()) {
+            return Optional.empty();
+        }
+
+        Optional<Book> optionalBook = bookRepository.findById(bookId);
+        if(optionalBook.isEmpty()) {
+            throw new EntityNotFoundException("No book with such Id");
+        }
+
+        Author foundAuthor = optionalAuthor.get();
+        Book foundBook = optionalBook.get();
+
+        foundBook.getAuthors().remove(foundAuthor);
+        foundAuthor.getBooks().remove(foundBook);
+
+        bookRepository.save(foundBook);
+        return Optional.of(authorRepository.save(foundAuthor));
+    }
 }

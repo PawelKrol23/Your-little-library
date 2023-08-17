@@ -21,4 +21,6 @@ public interface AuthorService {
     List<Book> getBooksNotWrittenBy(Author foundAuthor);
 
     Optional<Author> addBookToAuthor(Long bookId, Long authorId);
+
+    Optional<Author> removeBookFromAuthor(Long bookId, Long authorId);
 }

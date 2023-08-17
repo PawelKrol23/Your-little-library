@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Remove book from author</title>
+</head>
+<body>
+<h1 th:text="${'Remove book from author ' + author.firstName + ' ' + author.lastName}"></h1>
+<h2>Choose book to remove: </h2>
+<form th:each="book : ${author.books}" th:method="delete" th:action="@{/authors/{authorId}/remove-book/{bookId}(authorId=${authorId}, bookId=${book.id})}">
+  <div th:text="${book.title}"></div>
+  <div th:text="${book.genre.capitalizedName()}"></div>
+  <div th:text="${book.publicationYear}"></div>
+  <button type="submit">Remove book</button>
+</form>
+</body>
+</html>
