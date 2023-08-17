@@ -1,12 +1,15 @@
 package com.example.Spring6webapp.services;
 
+import com.example.Spring6webapp.models.author.Author;
 import com.example.Spring6webapp.models.book.Book;
+import com.example.Spring6webapp.repositories.AuthorRepository;
 import com.example.Spring6webapp.repositories.BookRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -14,6 +17,7 @@ import java.util.Optional;
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
+    private final AuthorRepository authorRepository;
 
     @Override
     public Iterable<Book> findAll() {
@@ -55,5 +59,32 @@ public class BookServiceImpl implements BookService {
         }
 
         bookRepository.deleteById(bookId);
+    }
+
+    @Override
+    public List<Author> getAuthorsNotOwningBook(Book book) {
+        return authorRepository.findAuthorsByBooksNotContaining(book);
+    }
+
+    @Override
+    public Optional<Book> addAuthorToBook(Long bookId, Long authorId) {
+        Optional<Book> optionalBook = bookRepository.findById(bookId);
+        if(optionalBook.isEmpty()) {
+            return Optional.empty();
+        }
+
+        Optional<Author> optionalAuthor = authorRepository.findById(authorId);
+        if(optionalAuthor.isEmpty()) {
+            throw new EntityNotFoundException("No Author with such Id");
+        }
+
+        Author foundAuthor = optionalAuthor.get();
+        Book foundBook = optionalBook.get();
+
+        foundBook.getAuthors().add(foundAuthor);
+        foundAuthor.getBooks().add(foundBook);
+
+        authorRepository.save(foundAuthor);
+        return Optional.of(bookRepository.save(foundBook));
     }
 }
