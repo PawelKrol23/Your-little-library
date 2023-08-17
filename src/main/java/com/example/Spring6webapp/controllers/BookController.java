@@ -123,4 +123,29 @@ public class BookController {
 
         return "redirect:/books/%d".formatted(updatedBook.getId());
     }
+
+    @GetMapping("/books/{bookId}/remove-author")
+    public String removeAuthorFromBookPage(@PathVariable Long bookId,
+                                           Model model) {
+        Book foundBook = bookService.getBookById(bookId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found"));
+        model.addAttribute("book", foundBook);
+
+        return "book/remove_author";
+    }
+
+    @DeleteMapping("/books/{bookId}/remove-author/{authorId}")
+    public String removeBookFromAuthor(@PathVariable Long authorId,
+                                       @PathVariable Long bookId) {
+
+        Book updatedBook;
+        try {
+            updatedBook = bookService.removeAuthorFromBook(bookId, authorId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found"));
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found");
+        }
+
+        return "redirect:/books/%d".formatted(updatedBook.getId());
+    }
 }

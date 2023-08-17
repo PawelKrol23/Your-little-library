@@ -20,4 +20,6 @@ public interface BookService {
     List<Author> getAuthorsNotOwningBook(Book book);
 
     Optional<Book> addAuthorToBook(Long bookId, Long authorId);
+
+    Optional<Book> removeAuthorFromBook(Long bookId, Long authorId);
 }

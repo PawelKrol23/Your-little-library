@@ -87,4 +87,26 @@ public class BookServiceImpl implements BookService {
         authorRepository.save(foundAuthor);
         return Optional.of(bookRepository.save(foundBook));
     }
+
+    @Override
+    public Optional<Book> removeAuthorFromBook(Long bookId, Long authorId) {
+        Optional<Book> optionalBook = bookRepository.findById(bookId);
+        if(optionalBook.isEmpty()) {
+            return Optional.empty();
+        }
+
+        Optional<Author> optionalAuthor = authorRepository.findById(authorId);
+        if(optionalAuthor.isEmpty()) {
+            throw new EntityNotFoundException("No Author with such Id");
+        }
+
+        Author foundAuthor = optionalAuthor.get();
+        Book foundBook = optionalBook.get();
+
+        foundBook.getAuthors().remove(foundAuthor);
+        foundAuthor.getBooks().remove(foundBook);
+
+        authorRepository.save(foundAuthor);
+        return Optional.of(bookRepository.save(foundBook));
+    }
 }
