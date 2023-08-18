@@ -8,25 +8,33 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 <body>
-<h1>Author List</h1>
-
-<table>
-  <tr>
-    <th>ID</th>
-    <th>First Name</th>
-    <th>Last Name</th>
-    <th>Nationality</th>
-    <th>Book Count</th>
-  </tr>
-  <tr th:each="author : ${authors}">
-    <th th:text="*{author.id}">ID</th>
-    <th th:text="${author.firstName}">First Name</th>
-    <th th:text="${author.lastName}">Last Name</th>
-    <th th:text="${author.nationality.getUtfFlag() + ' ' + author.nationality.capitalizedName()}"></th>
-    <th th:text="${author.books.size()}">Book count</th>
-  </tr>
-</table>
-
+<div th:insert="~{commons :: navbar}"></div>
+<section class="py-4">
+  <div class="container-lg">
+    <div class="text-center mb-5">
+      <h2>Author List</h2>
+      <p class="lead text-muted">Choose an author to see more details</p>
+    </div>
+    <hr>
+    <div class="row g-4">
+      <div th:each="author : ${authors}" class="col-12 col-md-6 col-lg-4 col-xl-3">
+        <a th:href="@{/authors/{authorId}(authorId=${author.id})}" class="text-decoration-none">
+          <div class="card text-center border-primary">
+            <div class="card-body">
+              <p class="lead card-subtitle" th:text="${author.nationality.utfFlag + ' ' + author.nationality.capitalizedName()}"></p>
+              <h4 class="card-title mb-1 fw-bolder text-primary" th:text="${author.firstName + ' ' + author.lastName}"></h4>
+              <p class="card-text text-muted" th:text="${'Born at ' + #temporals.format(author.dateOfBirth, 'dd MMM yyyy')}"></p>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+    <hr>
+    <a class="btn btn-primary" th:href="@{/authors/create-new}">
+      Add new author
+    </a>
+  </div>
+</section>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 </body>
 </html>

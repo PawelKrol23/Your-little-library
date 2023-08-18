@@ -16,7 +16,7 @@
       <p class="lead text-muted">Choose a book to see more details</p>
     </div>
     <hr>
-    <div class="row g-4 mb-2">
+    <div class="row g-4">
       <div th:each="book : ${books}" class="col-12 col-md-6 col-lg-4 col-xl-3">
         <a th:href="@{/books/{bookId}(bookId=${book.id})}" class="text-decoration-none">
           <div class="card text-center border-primary">
