@@ -22,14 +22,14 @@ public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(min = 2, max = 70)
+    @Size(min = 2, max = 70, message = "First names length must be between {min} and {max}")
     private String firstName;
-    @Size(min = 2, max = 70)
+    @Size(min = 2, max = 70, message = "Last names length must be between {min} and {max}")
     private String lastName;
-    @NotNull
+    @NotNull(message = "Date of birth cannot be empty")
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private LocalDate dateOfBirth;
-    @NotNull
+    @NotNull(message = "You need to choose a nationality")
     private Nationality nationality;
     @ManyToMany(mappedBy = "authors", cascade = CascadeType.PERSIST)
     @ToString.Exclude
