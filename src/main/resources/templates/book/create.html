@@ -27,7 +27,7 @@
             <label for="title" class="form-label">Title:</label>
             <div class="input-group" th:classappend="${#fields.hasErrors('title') ? 'has-validation' : ''}">
               <span class="input-group-text">
-                <i class="bi bi-person"></i>
+                <i class="bi bi-stars"></i>
               </span>
               <input type="text" aria-describedby="validationTitle" class="form-control" id="title" placeholder="e.g. Romeo and Juliet" th:field="*{title}" th:classappend="${#fields.hasErrors('title') ? 'is-invalid' : ''}" required>
               <div id="validationTitle" class="invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
@@ -39,7 +39,7 @@
             <label for="genre" class="form-label">Genre:</label>
             <div class="input-group" th:classappend="${#fields.hasErrors('genre') ? 'has-validation' : ''}">
               <span class="input-group-text">
-                <i class="bi bi-flag"></i>
+                <i class="bi bi-card-list"></i>
               </span>
               <select id="genre" class="form-select"  aria-describedby="validationGenre" th:field="*{genre}" th:classappend="${#fields.hasErrors('genre') ? 'is-invalid' : ''}" required>
                 <option value="" selected>--- Choose an option ---</option>

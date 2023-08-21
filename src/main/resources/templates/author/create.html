@@ -58,7 +58,6 @@
                 <option value="" selected>--- Choose an option ---</option>
                 <option th:each="nationality : ${nationalities}" th:text="${nationality.utfFlag + ' ' + nationality.capitalizedName()}" th:value="${nationality}"></option>
               </select>
-<!--              <input type="text" aria-describedby="validationLastName" class="form-control" id="nationality" placeholder="e.g. Shakespeare" th:field="*{nationality}" th:classappend="${#fields.hasErrors('nationality') ? 'is-invalid' : ''}">-->
               <div id="validationNationality" class="invalid-feedback" th:if="${#fields.hasErrors('nationality')}" th:errors="*{nationality}"></div>
             </div>
           </div>
