@@ -8,31 +8,80 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 <body>
-<form th:action="@{/authors/{id}/edit(id=${authorId})}" th:object="${author}" th:method="put">
-  <label for="firstName">First name:</label>
-  <input id="firstName" type="text" th:field="*{firstName}">
-  <div style="color: red;" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+<div th:insert="~{commons :: navbar}"></div>
+<section class="py-4">
+  <!-- header -->
+  <div class="container-lg">
+    <div class="text-center mb-5">
+      <h2>Update author</h2>
+      <p class="lead text-muted">Change values in form below to update an author</p>
+    </div>
 
-  <label for="lastName">Last name:</label>
-  <input id="lastName" type="text" th:field="*{lastName}">
-  <div style="color: red;" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+    <!-- form -->
+    <div class="row justify-content-center my-5">
+      <div class="col-lg-6">
+        <form th:object="${author}" method="post" th:action="@{/authors/create-new}">
 
-  <label for="dateOfBirth">Date of birth:</label>
-  <input id="dateOfBirth" type="date" th:field="*{dateOfBirth}">
-  <div style="color: red;" th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}"></div>
+          <!-- first name -->
+          <div class="mb-2">
+            <label for="firstName" class="form-label">First Name:</label>
+            <div class="input-group" th:classappend="${#fields.hasErrors('firstName') ? 'has-validation' : ''}">
+              <span class="input-group-text">
+                <i class="bi bi-person"></i>
+              </span>
+              <input type="text" aria-describedby="validationFirstName" class="form-control" id="firstName" placeholder="e.g. William" th:field="*{firstName}" th:classappend="${#fields.hasErrors('firstName') ? 'is-invalid' : ''}" required>
+              <div id="validationFirstName" class="invalid-feedback" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+            </div>
+          </div>
 
-  <label for="nationality">Nationality:</label>
-  <select id="nationality" th:field="*{nationality}">
-    <option value="" selected>--- Choose an option ---</option>
-    <option th:each="nationality : ${nationalities}" th:text="${nationality}" th:value="${nationality}"></option>
-  </select>
-  <div style="color: red;" th:if="${#fields.hasErrors('nationality')}" th:errors="*{nationality}"></div>
-  <button type="submit">Update Author</button>
-</form>
+          <!-- last name -->
+          <div class="mb-2">
+            <label for="lastName" class="form-label">Last name:</label>
+            <div class="input-group" th:classappend="${#fields.hasErrors('lastName') ? 'has-validation' : ''}">
+              <span class="input-group-text">
+                <i class="bi bi-person-fill"></i>
+              </span>
+              <input type="text" aria-describedby="validationLastName" class="form-control" id="lastName" placeholder="e.g. Shakespeare" th:field="*{lastName}" th:classappend="${#fields.hasErrors('lastName') ? 'is-invalid' : ''}" required>
+              <div id="validationLastName" class="invalid-feedback" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+            </div>
+          </div>
 
-<form th:action="@{/authors/{id}/edit(id=${authorId})}" th:method="delete">
-  <button type="submit">Delete Author</button>
-</form>
+          <!-- nationality -->
+          <div class="mb-2">
+            <label for="nationality" class="form-label">Nationality:</label>
+            <div class="input-group" th:classappend="${#fields.hasErrors('nationality') ? 'has-validation' : ''}">
+              <span class="input-group-text">
+                <i class="bi bi-flag"></i>
+              </span>
+              <select id="nationality" class="form-select"  aria-describedby="validationNationality" th:field="*{nationality}" th:classappend="${#fields.hasErrors('nationality') ? 'is-invalid' : ''}" required>
+                <option value="" selected>--- Choose an option ---</option>
+                <option th:each="nationality : ${nationalities}" th:text="${nationality.utfFlag + ' ' + nationality.capitalizedName()}" th:value="${nationality}"></option>
+              </select>
+              <div id="validationNationality" class="invalid-feedback" th:if="${#fields.hasErrors('nationality')}" th:errors="*{nationality}"></div>
+            </div>
+          </div>
+
+          <!-- date of birth -->
+          <div class="mb-4">
+            <label for="dateOfBirth" class="form-label">Date of birth:</label>
+            <div class="input-group" th:classappend="${#fields.hasErrors('dateOfBirth') ? 'has-validation' : ''}">
+              <span class="input-group-text">
+                <i class="bi bi-calendar"></i>
+              </span>
+              <input type="date" aria-describedby="validationDateOfBirth" class="form-control" id="dateOfBirth" placeholder="e.g. Shakespeare" th:field="*{dateOfBirth}" th:classappend="${#fields.hasErrors('dateOfBirth') ? 'is-invalid' : ''}" required>
+              <div id="validationDateOfBirth" class="invalid-feedback" th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}"></div>
+            </div>
+          </div>
+
+          <div class="mb-4 text-center">
+            <button type="submit" class="btn btn-secondary">Update author</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 </body>
