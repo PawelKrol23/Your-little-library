@@ -21,11 +21,11 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(min = 2, max = 120)
+    @Size(min = 2, max = 120, message = "Titles length must be between {min} and {max}")
     private String title;
     @NotNull
     private Genre genre;
-    @Max(2023)
+    @Max(value = 2023, message = "Book cannot be published after {value}")
     @NotNull
     private Integer publicationYear;
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
