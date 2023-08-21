@@ -24,6 +24,8 @@
               <p th:text="${'Last name: ' + author.lastName}" class="card-text fw-bold"></p>
               <p th:text="${'Born at: ' + #temporals.format(author.dateOfBirth, 'dd MMM yyyy')}" class="card-text fw-bold"></p>
               <p th:text="${'Nationality: ' + author.nationality.utfFlag + ' ' + author.nationality.capitalizedName()}" class="card-text fw-bold"></p>
+              <p th:text="${'Created at: ' + #temporals.format(author.createdAt, 'dd MMM yyyy hh:mm')}" class="card-text fw-bold"></p>
+              <p th:text="${'Last updated at: ' + #temporals.format(author.updatedAt, 'dd MMM yyyy hh:mm')}" class="card-text fw-bold"></p>
             </div>
           </div>
         </div>
