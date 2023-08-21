@@ -20,7 +20,7 @@
     <!-- form -->
     <div class="row justify-content-center my-5">
       <div class="col-lg-6">
-        <form th:object="${author}" method="post" th:action="@{/authors/create-new}">
+        <form th:object="${author}" th:method="put" th:action="@{/authors/{authorId}/edit(authorId=${authorId})}">
 
           <!-- first name -->
           <div class="mb-2">
