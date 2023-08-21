@@ -8,14 +8,31 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 <body>
-<h1 th:text="${'Remove book from author ' + author.firstName + ' ' + author.lastName}"></h1>
-<h2>Choose book to remove: </h2>
-<form th:each="book : ${author.books}" th:method="delete" th:action="@{/authors/{authorId}/remove-book/{bookId}(authorId=${authorId}, bookId=${book.id})}">
-  <div th:text="${book.title}"></div>
-  <div th:text="${book.genre.capitalizedName()}"></div>
-  <div th:text="${book.publicationYear}"></div>
-  <button type="submit">Remove book</button>
-</form>
+<div th:insert="~{commons :: navbar}"></div>
+<section class="py-4">
+  <div class="container-lg">
+    <div class="text-center mb-5">
+      <h2 th:text="${'Remove book from ' + author.firstName + ' ' + author.lastName + ' author'}"></h2>
+      <p class="lead text-muted">Choose a book to remove from author</p>
+    </div>
+    <hr>
+    <div class="row g-4">
+      <div th:each="book : ${author.books}" class="col-12 col-md-6 col-lg-4 col-xl-3">
+        <form class="m-0 p-0" th:method="delete" th:action="@{/authors/{authorId}/remove-book/{bookId}(authorId=${authorId}, bookId=${book.id})}">
+          <button type="submit" class="bg-transparent border-0 w-100 h-100 m-0 p-0">
+            <div class="card text-center border-primary">
+              <div class="card-body">
+                <p class="lead card-subtitle" th:text="${'Genre: ' + book.genre.capitalizedName()}"></p>
+                <h4 class="card-title mb-1 fw-bolder text-primary" th:text="${book.title}"></h4>
+                <p class="card-text text-muted" th:text="${'Published at ' + book.publicationYear}"></p>
+              </div>
+            </div>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 </body>
