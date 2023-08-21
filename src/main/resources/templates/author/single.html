@@ -8,17 +8,58 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 <body>
-  <h2>Author: </h2>
-  <div th:text="*{author.id}">ID</div>
-  <div th:text="${author.firstName}">First Name</div>
-  <div th:text="${author.lastName}">Last Name</div>
-  <div th:text="${author.nationality.getUtfFlag() + ' ' + author.nationality.capitalizedName()}"></div>
-  <h2>Books: </h2>
-  <div th:each="book : ${author.books}">
-    <div th:text="${book.title}">Title</div>
-    <div th:text="${book.genre.capitalizedName()}"></div>
-    <div th:text="${book.publicationYear}"></div>
-  </div>
+<div th:insert="~{commons :: navbar}"></div>
+
+  <!-- author details -->
+  <section class="py-4">
+    <div class="container-lg">
+      <div class="text-center mb-4 text-primary">
+        <h1 th:text="${author.firstName + ' ' + author.lastName + ' - author details'}"></h1>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-md-7 col-12 mb-4">
+          <div class="card border-primary shadow">
+            <div class="card-body">
+              <p th:text="${'First name: ' + author.firstName}" class="card-text fw-bold"></p>
+              <p th:text="${'Last name: ' + author.lastName}" class="card-text fw-bold"></p>
+              <p th:text="${'Born at: ' + #temporals.format(author.dateOfBirth, 'dd MMM yyyy')}" class="card-text fw-bold"></p>
+              <p th:text="${'Nationality: ' + author.nationality.utfFlag + ' ' + author.nationality.capitalizedName()}" class="card-text fw-bold"></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-7 col-12 mb-4 d-flex">
+          <a th:href="@{/authors/{authorId}/edit(authorId=${authorId})}" role="button" class="btn btn-primary me-3">Edit author</a>
+          <form th:action="@{/authors/{authorId}/edit(authorId=${authorId})}" th:method="delete">
+            <button type="submit" role="button" class="btn btn-danger">Delete author</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- authors books -->
+  <section class="py-4 bg-light">
+    <div class="container-lg">
+      <div class="text-center mb-5">
+        <h2>Books written by this author</h2>
+        <p class="lead text-muted">Choose a book to see more details</p>
+      </div>
+      <hr>
+      <div class="row g-4">
+        <div th:each="book : ${author.books}" class="col-12 col-md-6 col-lg-4 col-xl-3">
+          <a th:href="@{/books/{bookId}(bookId=${book.id})}" class="text-decoration-none">
+            <div class="card text-center border-primary">
+              <div class="card-body">
+                <p class="lead card-subtitle" th:text="${'Genre: ' + book.genre.capitalizedName()}"></p>
+                <h4 class="card-title mb-1 fw-bolder text-primary" th:text="${book.title}"></h4>
+                <p class="card-text text-muted" th:text="${'Published at ' + book.publicationYear}"></p>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 </body>
