@@ -25,9 +25,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public Page<Author> findAll(Integer page) {
-        // Pages are indexed from 0
-        // But in controller we start from 1
-        PageRequest pageRequest = PageRequest.of(page - 1, PAGE_SIZE, SORT);
+        PageRequest pageRequest = PageRequest.of(page, PAGE_SIZE, SORT);
         return authorRepository.findAll(pageRequest);
     }
 

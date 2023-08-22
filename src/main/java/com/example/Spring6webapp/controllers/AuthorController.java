@@ -6,6 +6,7 @@ import com.example.Spring6webapp.services.AuthorService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,14 +21,18 @@ public class AuthorController {
     private final AuthorService authorService;
 
     @GetMapping("/authors")
-    public String listAuthors(@RequestParam(required = false, defaultValue = "1") Integer page,
+    public String listAuthors(@RequestParam(required = false, defaultValue = "0") Integer page,
                               Model model) {
-        if(page < 1) {
-            page = 1;
+        if(page < 0) {
+            page = 0;
+        }
+
+        Page<Author> authorPage = authorService.findAll(page);
+        if(authorPage.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No such a page");
         }
 
         model.addAttribute("authors", authorService.findAll(page));
-
         return "author/list";
     }
 
