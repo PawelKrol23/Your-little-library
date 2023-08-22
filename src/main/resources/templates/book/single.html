@@ -8,18 +8,65 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 <body>
-<h2>Book: </h2>
-<div th:text="*{book.id}">ID</div>
-<div th:text="${book.title}">First Name</div>
-<div th:text="${book.genre.capitalizedName()}">Last Name</div>
-<div th:text="${book.publicationYear}"></div>
-<h2>Authors: </h2>
-<div th:each="author : ${book.authors}">
-  <div th:text="${author.firstName}"></div>
-  <div th:text="${author.lastName}"></div>
-  <div th:text="${author.nationality.utfFlag + ' ' + author.nationality.capitalizedName()}"></div>
-  <div th:text="${author.dateOfBirth}"></div>
-</div>
+<div th:insert="~{commons :: navbar}"></div>
+
+<!-- book details -->
+<section class="py-4">
+  <div class="container-lg">
+    <div class="text-center mb-4 text-primary">
+      <h1 th:text="${book.title + ' - book details'}"></h1>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-md-7 col-12 mb-4">
+        <div class="card border-primary shadow">
+          <div class="card-body">
+            <p th:text="${'Title: ' + book.title}" class="card-text fw-bold"></p>
+            <p th:text="${'Publication year: ' + book.publicationYear}" class="card-text fw-bold"></p>
+            <p th:text="${'Genre: ' + book.genre.capitalizedName()}" class="card-text fw-bold"></p>
+            <p th:text="${'Created at: ' + #temporals.format(book.createdAt, 'dd MMM yyyy hh:mm')}" class="card-text fw-bold"></p>
+            <p th:text="${'Last updated at: ' + #temporals.format(book.updatedAt, 'dd MMM yyyy hh:mm')}" class="card-text fw-bold"></p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-7 col-12 mb-4 d-flex">
+        <a th:href="@{/books/{bookId}/edit(bookId=${bookId})}" role="button" class="btn btn-primary me-3">Edit book</a>
+        <form th:action="@{/books/{bookId}/edit(bookId=${bookId})}" th:method="delete">
+          <button type="submit" role="button" class="btn btn-danger">Delete book</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- books authors -->
+<section class="py-5 bg-light">
+  <div class="container-lg">
+    <div class="text-center mb-5">
+      <h2>Authors of this book</h2>
+      <p class="lead text-muted">Choose an author to see more details</p>
+    </div>
+    <hr>
+    <div class="row g-4">
+      <div th:each="author : ${book.authors}" class="col-12 col-md-6 col-lg-4 col-xl-3">
+        <a th:href="@{/author/{authorId}(authorId=${author.id})}" class="text-decoration-none">
+          <div class="card text-center border-primary">
+            <div class="card-body">
+              <p class="lead card-subtitle" th:text="${author.nationality.utfFlag + ' ' + author.nationality.capitalizedName()}"></p>
+              <h4 class="card-title mb-1 fw-bolder text-primary" th:text="${author.firstName + ' ' + author.lastName}"></h4>
+              <p class="card-text text-muted" th:text="${'Born at ' + #temporals.format(author.dateOfBirth, 'dd MMM yyyy')}"></p>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+    <hr>
+    <div class="mb-4 d-flex">
+      <a th:href="@{/books/{bookId}/add-author(bookId=${bookId})}" role="button" class="btn btn-primary me-3">Add new author</a>
+      <a th:href="@{/books/{bookId}/remove-author(bookId=${bookId})}" role="button" class="btn btn-danger">Remove author</a>
+    </div>
+  </div>
+</section>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 </body>
 </html>
