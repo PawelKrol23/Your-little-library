@@ -20,12 +20,24 @@
         <div class="col-md-7 col-12 mb-4">
           <div class="card border-primary shadow">
             <div class="card-body">
-              <p th:text="${'First name: ' + author.firstName}" class="card-text fw-bold"></p>
-              <p th:text="${'Last name: ' + author.lastName}" class="card-text fw-bold"></p>
-              <p th:text="${'Born at: ' + #temporals.format(author.dateOfBirth, 'dd MMM yyyy')}" class="card-text fw-bold"></p>
-              <p th:text="${'Nationality: ' + author.nationality.utfFlag + ' ' + author.nationality.capitalizedName()}" class="card-text fw-bold"></p>
-              <p th:text="${'Created at: ' + #temporals.format(author.createdAt, 'dd MMM yyyy hh:mm')}" class="card-text fw-bold"></p>
-              <p th:text="${'Last updated at: ' + #temporals.format(author.updatedAt, 'dd MMM yyyy hh:mm')}" class="card-text fw-bold"></p>
+              <div class="row g-3">
+                <div class="col-5 text-end fw-bold">
+                  <p class="card-text"><i class="bi bi-person me-2"></i>First name: </p>
+                  <p class="card-text"><i class="bi bi-person-fill me-2"></i>Last name:</p>
+                  <p class="card-text"><i class="bi bi-calendar me-2"></i>Born at:</p>
+                  <p class="card-text"><i class="bi bi-flag me-2"></i>Nationality:</p>
+                  <p class="card-text"><i class="bi bi-calendar me-2"></i>Created at:</p>
+                  <p class="card-text"><i class="bi bi-calendar me-2"></i>Last updated at:</p>
+                </div>
+                <div class="col-7">
+                  <p th:text="${author.firstName}" class="card-text"></p>
+                  <p th:text="${author.lastName}" class="card-text"></p>
+                  <p th:text="${#temporals.format(author.dateOfBirth, 'dd MMM yyyy')}" class="card-text"></p>
+                  <p th:text="${author.nationality.utfFlag + ' ' + author.nationality.capitalizedName()}" class="card-text"></p>
+                  <p th:text="${#temporals.format(author.createdAt, 'dd MMM yyyy hh:mm')}" class="card-text"></p>
+                  <p th:text="${#temporals.format(author.updatedAt, 'dd MMM yyyy hh:mm')}" class="card-text"></p>
+                </div>
+              </div>
             </div>
           </div>
         </div>

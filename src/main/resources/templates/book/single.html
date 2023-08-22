@@ -48,7 +48,7 @@
     <hr>
     <div class="row g-4">
       <div th:each="author : ${book.authors}" class="col-12 col-md-6 col-lg-4 col-xl-3">
-        <a th:href="@{/author/{authorId}(authorId=${author.id})}" class="text-decoration-none">
+        <a th:href="@{/authors/{authorId}(authorId=${author.id})}" class="text-decoration-none">
           <div class="card text-center border-primary">
             <div class="card-body">
               <p class="lead card-subtitle" th:text="${author.nationality.utfFlag + ' ' + author.nationality.capitalizedName()}"></p>
