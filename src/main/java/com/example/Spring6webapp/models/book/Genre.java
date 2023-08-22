@@ -7,7 +7,8 @@ public enum Genre {
     MYSTERY,
     HORROR,
     FICTION,
-    COMEDY;
+    COMEDY,
+    NOVEL;
 
     public String capitalizedName() {
         char[] chars = this.name().toCharArray();

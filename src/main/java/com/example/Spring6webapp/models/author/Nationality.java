@@ -14,7 +14,8 @@ public enum Nationality {
     FRENCH("\uD83C\uDDEB\uD83C\uDDF7"),
     SPANISH("\uD83C\uDDEA\uD83C\uDDF8"),
     JAPANESE("\uD83C\uDDEF\uD83C\uDDF5"),
-    DANISH("\uD83C\uDDE9\uD83C\uDDF0");
+    DANISH("\uD83C\uDDE9\uD83C\uDDF0"),
+    DUTCH("\uD83C\uDDF3\uD83C\uDDF1");
 
     private final String utfFlag;
 
