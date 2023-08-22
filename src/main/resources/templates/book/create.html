@@ -8,10 +8,11 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 <body>
-<div th:insert="~{commons :: navbar}"></div>
+<div th:replace="~{commons :: navbar}"></div>
 <section class="py-4">
   <!-- header -->
   <div class="container-lg">
+    <div th:replace="~{commons :: back-button(@{/books}, 'Back to book list')}"></div>
     <div class="text-center mb-5">
       <h2>Create new Book</h2>
       <p class="lead text-muted">Fulfill form to create new book</p>
@@ -62,7 +63,7 @@
           </div>
 
           <div class="mb-4 text-center">
-            <button type="submit" class="btn btn-secondary">Add new book</button>
+            <button type="submit" class="btn btn-primary">Add new book</button>
           </div>
         </form>
       </div>

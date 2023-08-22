@@ -9,10 +9,11 @@
 </head>
 <body>
 
-<div th:insert="~{commons :: navbar}"></div>
+<div th:replace="~{commons :: navbar}"></div>
 <section class="py-4">
   <!-- header -->
   <div class="container-lg">
+    <div th:replace="~{commons :: back-button(@{/authors}, 'Back to author list')}"></div>
     <div class="text-center mb-5">
       <h2>Create new Author</h2>
       <p class="lead text-muted">Fulfill form to create new author</p>
