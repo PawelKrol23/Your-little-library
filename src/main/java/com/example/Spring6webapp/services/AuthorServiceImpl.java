@@ -6,6 +6,9 @@ import com.example.Spring6webapp.repositories.AuthorRepository;
 import com.example.Spring6webapp.repositories.BookRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,10 +20,15 @@ import java.util.Optional;
 public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
+    private final static Integer PAGE_SIZE = 12;
+    private final static Sort SORT = Sort.by(Sort.Direction.DESC, "createdAt");
 
     @Override
-    public Iterable<Author> findAll() {
-        return authorRepository.findAll();
+    public Page<Author> findAll(Integer page) {
+        // Pages are indexed from 0
+        // But in controller we start from 1
+        PageRequest pageRequest = PageRequest.of(page - 1, PAGE_SIZE, SORT);
+        return authorRepository.findAll(pageRequest);
     }
 
     @Override

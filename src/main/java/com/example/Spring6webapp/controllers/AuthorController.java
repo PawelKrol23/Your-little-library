@@ -20,8 +20,13 @@ public class AuthorController {
     private final AuthorService authorService;
 
     @GetMapping("/authors")
-    public String listAuthors(Model model) {
-        model.addAttribute("authors", authorService.findAll());
+    public String listAuthors(@RequestParam(required = false, defaultValue = "1") Integer page,
+                              Model model) {
+        if(page < 1) {
+            page = 1;
+        }
+
+        model.addAttribute("authors", authorService.findAll(page));
 
         return "author/list";
     }
