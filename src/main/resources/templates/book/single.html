@@ -21,14 +21,14 @@
         <div class="card border-primary shadow">
           <div class="card-body">
             <div class="row g-3">
-              <div class="col-5 text-end fw-bold">
+              <div class="col-6 text-end fw-bold">
                 <p class="card-text"><i class="bi bi-stars me-2"></i>Title: </p>
                 <p class="card-text"><i class="bi bi-calendar me-2"></i>Publication year:</p>
                 <p class="card-text"><i class="bi bi-card-list me-2"></i>Genre:</p>
                 <p class="card-text"><i class="bi bi-calendar me-2"></i>Created at:</p>
                 <p class="card-text"><i class="bi bi-calendar me-2"></i>Last updated at:</p>
               </div>
-              <div class="col-7">
+              <div class="col-6">
                 <p th:text="${book.title}" class="card-text"></p>
                 <p th:text="${book.publicationYear}" class="card-text"></p>
                 <p th:text="${book.genre.capitalizedName()}" class="card-text"></p>

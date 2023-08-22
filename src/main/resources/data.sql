@@ -1,5 +1,5 @@
 -- Books
--- Genres: 0 - ROMANCE, 1 - FANTASY, 2 - THRILLER, 3 - MYSTERY, 4 - HORROR, 5 - FICTION
+-- Genres: 0 - ROMANCE, 1 - FANTASY, 2 - THRILLER, 3 - MYSTERY, 4 - HORROR, 5 - FICTION, 6 - COMEDY
 INSERT INTO Book(title, genre, publication_year, created_at, updated_at)
 VALUES ('The Nanny Diaries', 0, 2002, '2023-08-22 01.20.00', '2023-08-22 01.20.00');
 INSERT INTO Book(title, genre, publication_year, created_at, updated_at)
@@ -12,9 +12,20 @@ INSERT INTO Book(title, genre, publication_year, created_at, updated_at)
 VALUES ('Good Omens', 4, 1990, '2023-08-22 01.20.00', '2023-08-22 01.20.00');
 INSERT INTO Book(title, genre, publication_year, created_at, updated_at)
 VALUES ('The Little Paris Bookshop', 5, 2013, '2023-08-22 01.20.00', '2023-08-22 01.20.00');
+INSERT INTO Book(title, genre, publication_year, created_at, updated_at)
+VALUES ('The Little Old Lady Who Broke All the Rules', 6, 2012, '2023-08-22 01.20.00', '2023-08-22 01.20.00');
+INSERT INTO Book(title, genre, publication_year, created_at, updated_at)
+VALUES ('The Elegance of the Hedgehog', 2, 2006, '2023-08-22 01.20.00', '2023-08-22 01.20.00');
+INSERT INTO Book(title, genre, publication_year, created_at, updated_at)
+VALUES ('The Shadow of the Wind', 3, 2001, '2023-08-22 01.20.00', '2023-08-22 01.20.00');
+INSERT INTO Book(title, genre, publication_year, created_at, updated_at)
+VALUES ('Blind Willow, Sleeping Woman', 1, 2006, '2023-08-22 01.20.00', '2023-08-22 01.20.00');
+INSERT INTO Book(title, genre, publication_year, created_at, updated_at)
+VALUES ('The Library of Shadows', 5, 2009, '2023-08-22 01.20.00', '2023-08-22 01.20.00');
 
 -- Authors
--- Nationalities: 0 - UNITED_KINGDOM, 1 - GERMAN, 2 - AMERICAN
+-- Nationalities: 0 - UNITED_KINGDOM, 1 - GERMAN, 2 - AMERICAN, 3 - SWEDE, 4 - FRENCH, 5 - SPANISH, 6 - JAPANESE
+-- 7 - DANISH
 INSERT INTO Author(first_name, last_name, date_of_birth, nationality, created_at, updated_at)
 VALUES ('Emma', 'McLaughlin', '1974-02-07', 2, '2023-08-22 01.20.00', '2023-08-22 01.20.00');
 INSERT INTO Author(first_name, last_name, date_of_birth, nationality, created_at, updated_at)
@@ -37,6 +48,16 @@ INSERT INTO Author(first_name, last_name, date_of_birth, nationality, created_at
 VALUES ('Neil', 'Gaiman', '1960-11-10', 0, '2023-08-22 01.20.00', '2023-08-22 01.20.00');
 INSERT INTO Author(first_name, last_name, date_of_birth, nationality, created_at, updated_at)
 VALUES ('Nina', 'George', '1973-08-30', 1, '2023-08-22 01.20.00', '2023-08-22 01.20.00');
+INSERT INTO Author(first_name, last_name, date_of_birth, nationality, created_at, updated_at)
+VALUES ('Catharina', 'Ingelman-Sundberg', '1948-01-01', 3, '2023-08-22 01.20.00', '2023-08-22 01.20.00');
+INSERT INTO Author(first_name, last_name, date_of_birth, nationality, created_at, updated_at)
+VALUES ('Muriel', 'Barbery', '1969-05-28', 4, '2023-08-22 01.20.00', '2023-08-22 01.20.00');
+INSERT INTO Author(first_name, last_name, date_of_birth, nationality, created_at, updated_at)
+VALUES ('Carlos', 'Ruiz Zafón', '1964-09-25', 5, '2023-08-22 01.20.00', '2023-08-22 01.20.00');
+INSERT INTO Author(first_name, last_name, date_of_birth, nationality, created_at, updated_at)
+VALUES ('Haruki', 'Murakami', '1949-01-12', 6, '2023-08-22 01.20.00', '2023-08-22 01.20.00');
+INSERT INTO Author(first_name, last_name, date_of_birth, nationality, created_at, updated_at)
+VALUES ('Mikkel', 'Birkegaard', '1968-12-09', 7, '2023-08-22 01.20.00', '2023-08-22 01.20.00');
 
 -- Relationship
 INSERT INTO Author_Book(author_id, book_id) VALUES ( SELECT id FROM Author WHERE first_name='Emma' AND last_name='McLaughlin',
@@ -61,3 +82,13 @@ INSERT INTO Author_Book(author_id, book_id) VALUES ( SELECT id FROM Author WHERE
                                                      SELECT id FROM Book WHERE title='Good Omens');
 INSERT INTO Author_Book(author_id, book_id) VALUES ( SELECT id FROM Author WHERE first_name='Nina' AND last_name='George',
                                                      SELECT id FROM Book WHERE title='The Little Paris Bookshop');
+INSERT INTO Author_Book(author_id, book_id) VALUES ( SELECT id FROM Author WHERE first_name='Catharina' AND last_name='Ingelman-Sundberg',
+                                                     SELECT id FROM Book WHERE title='The Little Old Lady Who Broke All the Rules');
+INSERT INTO Author_Book(author_id, book_id) VALUES ( SELECT id FROM Author WHERE first_name='Muriel' AND last_name='Barbery',
+                                                     SELECT id FROM Book WHERE title='The Elegance of the Hedgehog');
+INSERT INTO Author_Book(author_id, book_id) VALUES ( SELECT id FROM Author WHERE first_name='Carlos' AND last_name='Ruiz Zafón',
+                                                     SELECT id FROM Book WHERE title='The Shadow of the Wind');
+INSERT INTO Author_Book(author_id, book_id) VALUES ( SELECT id FROM Author WHERE first_name='Haruki' AND last_name='Murakami',
+                                                     SELECT id FROM Book WHERE title='Blind Willow, Sleeping Woman');
+INSERT INTO Author_Book(author_id, book_id) VALUES ( SELECT id FROM Author WHERE first_name='Mikkel' AND last_name='Birkegaard',
+                                                     SELECT id FROM Book WHERE title='The Library of Shadows');

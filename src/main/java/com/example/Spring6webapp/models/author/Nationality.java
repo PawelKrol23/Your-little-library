@@ -9,7 +9,12 @@ public enum Nationality {
 
     UNITED_KINGDOM("\uD83C\uDDEC\uD83C\uDDE7"),
     GERMAN("\uD83C\uDDE9\uD83C\uDDEA"),
-    AMERICAN("\uD83C\uDDFA\uD83C\uDDF8");
+    AMERICAN("\uD83C\uDDFA\uD83C\uDDF8"),
+    SWEDE("\uD83C\uDDF8\uD83C\uDDEA"),
+    FRENCH("\uD83C\uDDEB\uD83C\uDDF7"),
+    SPANISH("\uD83C\uDDEA\uD83C\uDDF8"),
+    JAPANESE("\uD83C\uDDEF\uD83C\uDDF5"),
+    DANISH("\uD83C\uDDE9\uD83C\uDDF0");
 
     private final String utfFlag;
 

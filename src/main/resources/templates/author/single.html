@@ -21,7 +21,7 @@
           <div class="card border-primary shadow">
             <div class="card-body">
               <div class="row g-3">
-                <div class="col-5 text-end fw-bold">
+                <div class="col-6 text-end fw-bold">
                   <p class="card-text"><i class="bi bi-person me-2"></i>First name: </p>
                   <p class="card-text"><i class="bi bi-person-fill me-2"></i>Last name:</p>
                   <p class="card-text"><i class="bi bi-calendar me-2"></i>Born at:</p>
@@ -29,7 +29,7 @@
                   <p class="card-text"><i class="bi bi-calendar me-2"></i>Created at:</p>
                   <p class="card-text"><i class="bi bi-calendar me-2"></i>Last updated at:</p>
                 </div>
-                <div class="col-7">
+                <div class="col-6">
                   <p th:text="${author.firstName}" class="card-text"></p>
                   <p th:text="${author.lastName}" class="card-text"></p>
                   <p th:text="${#temporals.format(author.dateOfBirth, 'dd MMM yyyy', new java.util.Locale('en', 'EN'))}" class="card-text"></p>
