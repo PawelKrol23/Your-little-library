@@ -11,12 +11,17 @@
 <div th:replace="~{commons :: navbar}"></div>
 <section class="py-4">
   <div class="container-lg">
+    <!-- back button -->
     <div th:replace="~{commons :: back-button(@{/authors/{authorId}(authorId=${authorId})}, 'Back to author')}"></div>
+
+    <!-- lead text -->
     <div class="text-center mb-5">
       <h2 th:text="${'Add book to ' + author.firstName + ' ' + author.lastName + ' author'}"></h2>
       <p class="lead text-muted">Choose a book to add to author</p>
     </div>
     <hr>
+
+    <!-- book list -->
     <div class="row g-4">
       <div th:each="book : ${books}" class="col-12 col-md-6 col-lg-4 col-xl-3">
         <form class="m-0 p-0" th:method="put" th:action="@{/authors/{authorId}/add-book/{bookId}(authorId=${authorId}, bookId=${book.id})}">
@@ -32,6 +37,7 @@
         </form>
       </div>
     </div>
+
   </div>
 </section>
 

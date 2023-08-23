@@ -11,9 +11,11 @@
 
 <div th:replace="~{commons :: navbar}"></div>
 <section class="py-4">
-  <!-- header -->
   <div class="container-lg">
+    <!-- back button -->
     <div th:replace="~{commons :: back-button(@{/authors}, 'Back to author list')}"></div>
+
+    <!-- lead text -->
     <div class="text-center mb-5">
       <h2>Create new Author</h2>
       <p class="lead text-muted">Fulfill form to create new author</p>
@@ -75,12 +77,15 @@
             </div>
           </div>
 
+          <!-- submit button -->
           <div class="mb-4 text-center">
             <button type="submit" class="btn btn-primary">Add new author</button>
           </div>
+
         </form>
       </div>
     </div>
+
   </div>
 </section>
 

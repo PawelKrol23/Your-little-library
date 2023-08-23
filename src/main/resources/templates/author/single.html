@@ -10,76 +10,91 @@
 <body>
 <div th:replace="~{commons :: navbar}"></div>
 
-  <!-- author details -->
-  <section class="py-4">
-    <div class="container-lg">
-      <div class="text-center mb-4 text-primary">
-        <h1 th:text="${author.firstName + ' ' + author.lastName + ' - author details'}"></h1>
-      </div>
-      <div class="row justify-content-center">
-        <div class="col-md-7 col-12 mb-4">
-          <div class="card border-primary shadow">
-            <div class="card-body">
-              <div class="row g-3">
-                <div class="col-6 text-end fw-bold">
-                  <p class="card-text"><i class="bi bi-person me-2"></i>First name: </p>
-                  <p class="card-text"><i class="bi bi-person-fill me-2"></i>Last name:</p>
-                  <p class="card-text"><i class="bi bi-calendar me-2"></i>Born at:</p>
-                  <p class="card-text"><i class="bi bi-flag me-2"></i>Nationality:</p>
-                  <p class="card-text"><i class="bi bi-calendar me-2"></i>Created at:</p>
-                  <p class="card-text"><i class="bi bi-calendar me-2"></i>Last updated at:</p>
-                </div>
-                <div class="col-6">
-                  <p th:text="${author.firstName}" class="card-text"></p>
-                  <p th:text="${author.lastName}" class="card-text"></p>
-                  <p th:text="${#temporals.format(author.dateOfBirth, 'dd MMM yyyy')}" class="card-text"></p>
-                  <p th:text="${author.nationality.utfFlag + ' ' + author.nationality.capitalizedName()}" class="card-text"></p>
-                  <p th:text="${#temporals.format(author.createdAt, 'dd MMM yyyy hh:mm')}" class="card-text"></p>
-                  <p th:text="${#temporals.format(author.updatedAt, 'dd MMM yyyy hh:mm')}" class="card-text"></p>
-                </div>
+<!-- author details -->
+<section class="py-4">
+  <div class="container-lg">
+
+    <!-- lead text -->
+    <div class="text-center mb-4 text-primary">
+      <h1 th:text="${author.firstName + ' ' + author.lastName + ' - author details'}"></h1>
+    </div>
+
+    <div class="row justify-content-center">
+
+      <!-- author details -->
+      <div class="col-md-7 col-12 mb-4">
+        <div class="card border-primary shadow">
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-6 text-end fw-bold">
+                <p class="card-text"><i class="bi bi-person me-2"></i>First name: </p>
+                <p class="card-text"><i class="bi bi-person-fill me-2"></i>Last name:</p>
+                <p class="card-text"><i class="bi bi-calendar me-2"></i>Born at:</p>
+                <p class="card-text"><i class="bi bi-flag me-2"></i>Nationality:</p>
+                <p class="card-text"><i class="bi bi-calendar me-2"></i>Created at:</p>
+                <p class="card-text"><i class="bi bi-calendar me-2"></i>Last updated at:</p>
+              </div>
+              <div class="col-6">
+                <p th:text="${author.firstName}" class="card-text"></p>
+                <p th:text="${author.lastName}" class="card-text"></p>
+                <p th:text="${#temporals.format(author.dateOfBirth, 'dd MMM yyyy')}" class="card-text"></p>
+                <p th:text="${author.nationality.utfFlag + ' ' + author.nationality.capitalizedName()}" class="card-text"></p>
+                <p th:text="${#temporals.format(author.createdAt, 'dd MMM yyyy hh:mm')}" class="card-text"></p>
+                <p th:text="${#temporals.format(author.updatedAt, 'dd MMM yyyy hh:mm')}" class="card-text"></p>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-md-7 col-12 mb-4 d-flex">
-          <a th:href="@{/authors/{authorId}/edit(authorId=${authorId})}" role="button" class="btn btn-primary me-3">Edit author</a>
-          <form th:action="@{/authors/{authorId}/edit(authorId=${authorId})}" th:method="delete">
-            <button type="submit" role="button" class="btn btn-danger">Delete author</button>
-          </form>
-        </div>
       </div>
-    </div>
-  </section>
 
-  <!-- authors books -->
-  <section class="py-5 bg-light">
-    <div class="container-lg">
-      <div class="text-center mb-5">
-        <h2>Books written by this author</h2>
-        <p class="lead text-muted">Choose a book to see more details</p>
+      <!-- author action buttons -->
+      <div class="col-md-7 col-12 mb-4 d-flex">
+        <a th:href="@{/authors/{authorId}/edit(authorId=${authorId})}" role="button" class="btn btn-primary me-3">Edit author</a>
+        <form th:action="@{/authors/{authorId}/edit(authorId=${authorId})}" th:method="delete">
+          <button type="submit" role="button" class="btn btn-danger">Delete author</button>
+        </form>
       </div>
-      <hr>
-      <div class="row g-4">
-        <div th:each="book : ${author.books}" class="col-12 col-md-6 col-lg-4 col-xl-3">
-          <a th:href="@{/books/{bookId}(bookId=${book.id})}" class="text-decoration-none">
-            <div class="card text-center border-primary">
-              <div class="card-body">
-                <p class="lead card-subtitle" th:text="${'Genre: ' + book.genre.capitalizedName()}"></p>
-                <h4 class="card-title mb-1 fw-bolder text-primary" th:text="${book.title}"></h4>
-                <p class="card-text text-muted" th:text="${'Published at ' + book.publicationYear}"></p>
-              </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- authors books -->
+<section class="py-5 bg-light">
+  <div class="container-lg">
+
+    <!-- lead text -->
+    <div class="text-center mb-5">
+      <h2>Books written by this author</h2>
+      <p class="lead text-muted">Choose a book to see more details</p>
+    </div>
+    <hr>
+
+    <!-- book list -->
+    <div class="row g-4">
+      <div th:each="book : ${author.books}" class="col-12 col-md-6 col-lg-4 col-xl-3">
+        <a th:href="@{/books/{bookId}(bookId=${book.id})}" class="text-decoration-none">
+          <div class="card text-center border-primary">
+            <div class="card-body">
+              <p class="lead card-subtitle" th:text="${'Genre: ' + book.genre.capitalizedName()}"></p>
+              <h4 class="card-title mb-1 fw-bolder text-primary" th:text="${book.title}"></h4>
+              <p class="card-text text-muted" th:text="${'Published at ' + book.publicationYear}"></p>
             </div>
-          </a>
-        </div>
-      </div>
-      <hr>
-      <div class="mb-4 d-flex">
-        <a th:href="@{/authors/{authorId}/add-book(authorId=${authorId})}" role="button" class="btn btn-primary me-3">Add new book</a>
-        <a th:href="@{/authors/{authorId}/remove-book(authorId=${authorId})}" role="button" class="btn btn-danger">Remove book</a>
+          </div>
+        </a>
       </div>
     </div>
-  </section>
+    <hr>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <!-- relationship buttons -->
+    <div class="mb-4 d-flex">
+      <a th:href="@{/authors/{authorId}/add-book(authorId=${authorId})}" role="button" class="btn btn-primary me-3">Add new book</a>
+      <a th:href="@{/authors/{authorId}/remove-book(authorId=${authorId})}" role="button" class="btn btn-danger">Remove book</a>
+    </div>
+
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 </body>
 </html>
