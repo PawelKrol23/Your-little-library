@@ -11,12 +11,17 @@
 <div th:replace="~{commons :: navbar}"></div>
 <section class="py-4">
   <div class="container-lg">
+    <!-- back button -->
     <div th:replace="~{commons :: back-button(@{/books/{bookId}(bookId=${bookId})}, 'Back to book')}"></div>
+
+    <!-- lead text -->
     <div class="text-center mb-5">
       <h2 th:text="${'Remove author from ' + book.title + ' book'}"></h2>
       <p class="lead text-muted">Choose an author to remove from book</p>
     </div>
     <hr>
+
+    <!-- author list -->
     <div class="row g-4">
       <div th:each="author : ${book.authors}" class="col-12 col-md-6 col-lg-4 col-xl-3">
         <form class="m-0 p-0" th:method="delete" th:action="@{/books/{bookId}/remove-author/{authorId}(authorId=${author.id}, bookId=${bookId})}">
@@ -25,13 +30,14 @@
               <div class="card-body">
                 <p class="lead card-subtitle" th:text="${author.nationality.utfFlag + ' ' + author.nationality.capitalizedName()}"></p>
                 <h4 class="card-title mb-1 fw-bolder text-primary" th:text="${author.firstName + ' ' + author.lastName}"></h4>
-                <p class="card-text text-muted" th:text="${'Born at ' + #temporals.format(author.dateOfBirth, 'dd MMM yyyy', new java.util.Locale('en', 'EN'))}"></p>
+                <p class="card-text text-muted" th:text="${'Born at ' + #temporals.format(author.dateOfBirth, 'dd MMM yyyy')}"></p>
               </div>
             </div>
           </button>
         </form>
       </div>
     </div>
+
   </div>
 </section>
 

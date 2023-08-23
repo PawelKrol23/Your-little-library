@@ -32,10 +32,10 @@
                 <div class="col-6">
                   <p th:text="${author.firstName}" class="card-text"></p>
                   <p th:text="${author.lastName}" class="card-text"></p>
-                  <p th:text="${#temporals.format(author.dateOfBirth, 'dd MMM yyyy', new java.util.Locale('en', 'EN'))}" class="card-text"></p>
+                  <p th:text="${#temporals.format(author.dateOfBirth, 'dd MMM yyyy')}" class="card-text"></p>
                   <p th:text="${author.nationality.utfFlag + ' ' + author.nationality.capitalizedName()}" class="card-text"></p>
-                  <p th:text="${#temporals.format(author.createdAt, 'dd MMM yyyy hh:mm', new java.util.Locale('en', 'EN'))}" class="card-text"></p>
-                  <p th:text="${#temporals.format(author.updatedAt, 'dd MMM yyyy hh:mm', new java.util.Locale('en', 'EN'))}" class="card-text"></p>
+                  <p th:text="${#temporals.format(author.createdAt, 'dd MMM yyyy hh:mm')}" class="card-text"></p>
+                  <p th:text="${#temporals.format(author.updatedAt, 'dd MMM yyyy hh:mm')}" class="card-text"></p>
                 </div>
               </div>
             </div>
