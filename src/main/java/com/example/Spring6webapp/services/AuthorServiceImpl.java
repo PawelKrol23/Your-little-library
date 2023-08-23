@@ -24,7 +24,7 @@ public class AuthorServiceImpl implements AuthorService {
     private final static Sort SORT = Sort.by(Sort.Direction.DESC, "createdAt");
 
     @Override
-    public Page<Author> findAll(Integer page) {
+    public Page<Author> getAuthorPage(Integer page) {
         PageRequest pageRequest = PageRequest.of(page, PAGE_SIZE, SORT);
         return authorRepository.findAll(pageRequest);
     }

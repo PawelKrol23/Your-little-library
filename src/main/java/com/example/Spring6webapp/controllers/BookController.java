@@ -6,6 +6,7 @@ import com.example.Spring6webapp.services.BookService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,10 +21,18 @@ public class BookController {
     private final BookService bookService;
 
     @RequestMapping("/books")
-    public String getBooks(Model model) {
+    public String getBooks(@RequestParam(required = false, defaultValue = "0") Integer page,
+                           Model model) {
+        if(page < 0) {
+            page = 0;
+        }
 
-        model.addAttribute("books", bookService.findAll());
+        Page<Book> bookPage = bookService.getBookPage(page);
+        if(bookPage.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No such a page");
+        }
 
+        model.addAttribute("books", bookPage);
         return "book/list";
     }
 

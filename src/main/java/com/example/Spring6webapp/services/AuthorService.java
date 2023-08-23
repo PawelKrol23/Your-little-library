@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface AuthorService {
 
-    Page<Author> findAll(Integer pageNumber);
+    Page<Author> getAuthorPage(Integer page);
 
     Author createNewAuthor(Author author);
 

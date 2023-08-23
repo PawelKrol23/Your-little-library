@@ -27,12 +27,12 @@ public class AuthorController {
             page = 0;
         }
 
-        Page<Author> authorPage = authorService.findAll(page);
+        Page<Author> authorPage = authorService.getAuthorPage(page);
         if(authorPage.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No such a page");
         }
 
-        model.addAttribute("authors", authorService.findAll(page));
+        model.addAttribute("authors", authorService.getAuthorPage(page));
         return "author/list";
     }
 
