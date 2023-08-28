@@ -18,9 +18,21 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor
 public class BookController {
 
+    // Dependencies
     private final BookService bookService;
 
-    @RequestMapping("/books")
+    // Error messages
+    public static final String BOOK_NOT_FOUND_ERROR_MESSAGE = "No author with such ID";
+
+    // Paths
+    public static final String BOOKS_PATH = "/books";
+    public static final String BOOKS_ID_PATH = BOOKS_PATH + "/{bookId}";
+    public static final String BOOKS_CREATE_PATH = BOOKS_PATH + "/create-new";
+    public static final String BOOKS_EDIT_PATH = BOOKS_ID_PATH + "/edit";
+    public static final String BOOKS_ADD_AUTHOR_PATH = BOOKS_ID_PATH + "/add-author";
+    public static final String BOOKS_REMOVE_AUTHOR_PATH = BOOKS_ID_PATH + "/remove-author";
+
+    @RequestMapping(BOOKS_PATH)
     public String getBooks(@RequestParam(required = false, defaultValue = "0") Integer page,
                            Model model) {
         if(page < 0) {
@@ -29,24 +41,24 @@ public class BookController {
 
         Page<Book> bookPage = bookService.getBookPage(page);
         if(bookPage.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No such a page");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No such a book page");
         }
 
         model.addAttribute("books", bookPage);
         return "book/list";
     }
 
-    @GetMapping("/books/{bookId}")
+    @GetMapping(BOOKS_ID_PATH)
     public String getSingleBook(@PathVariable Long bookId,
                                   Model model) {
         Book foundBook = bookService.getBookById(bookId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, BOOK_NOT_FOUND_ERROR_MESSAGE));
         model.addAttribute("book", foundBook);
 
         return "book/single";
     }
 
-    @GetMapping("/books/create-new")
+    @GetMapping(BOOKS_CREATE_PATH)
     public String createNewBookForm(Model model) {
         model.addAttribute("genres", Genre.values());
         model.addAttribute("book", new Book());
@@ -54,7 +66,7 @@ public class BookController {
         return "book/create";
     }
 
-    @PostMapping("/books/create-new")
+    @PostMapping(BOOKS_CREATE_PATH)
     public String createNewBook(@Valid @ModelAttribute("book") Book book,
                                   BindingResult result,
                                   Model model) {
@@ -67,11 +79,11 @@ public class BookController {
         return "redirect:/books/%d".formatted(newBookId);
     }
 
-    @GetMapping("/books/{bookId}/edit")
+    @GetMapping(BOOKS_EDIT_PATH)
     public String editBookForm(@PathVariable Long bookId,
                                Model model) {
         Book foundBook = bookService.getBookById(bookId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, BOOK_NOT_FOUND_ERROR_MESSAGE));
 
         model.addAttribute("book", foundBook);
         model.addAttribute("genres", Genre.values());
@@ -79,7 +91,7 @@ public class BookController {
         return "book/edit";
     }
 
-    @PutMapping("/books/{bookId}/edit")
+    @PutMapping(BOOKS_EDIT_PATH)
     public String updateBookById(@PathVariable Long bookId,
                                  @Valid @ModelAttribute("book") Book book,
                                  BindingResult result,
@@ -90,12 +102,12 @@ public class BookController {
         }
 
         Book updatedBook = bookService.updateBookById(book, bookId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, BOOK_NOT_FOUND_ERROR_MESSAGE));
 
         return "redirect:/books/%d".formatted(updatedBook.getId());
     }
 
-    @DeleteMapping("/books/{bookId}/edit")
+    @DeleteMapping(BOOKS_EDIT_PATH)
     public String deleteBookById(@PathVariable Long bookId) {
 
         try {
@@ -107,52 +119,52 @@ public class BookController {
         return "redirect:/books";
     }
 
-    @GetMapping("/books/{bookId}/add-author")
+    @GetMapping(BOOKS_ADD_AUTHOR_PATH)
     public String addAuthorToBookPage(@PathVariable Long bookId,
                                       Model model) {
         Book foundBook = bookService.getBookById(bookId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, BOOK_NOT_FOUND_ERROR_MESSAGE));
         model.addAttribute("book", foundBook);
         model.addAttribute("authors", bookService.getAuthorsNotOwningBook(foundBook));
 
         return "book/add_author";
     }
 
-    @PutMapping("/books/{bookId}/add-author/{authorId}")
+    @PutMapping(BOOKS_ADD_AUTHOR_PATH + "/{authorId}")
     public String addBookToAuthor(@PathVariable Long authorId,
                                   @PathVariable Long bookId) {
 
         Book updatedBook;
         try {
             updatedBook = bookService.addAuthorToBook(bookId, authorId)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found"));
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, BOOK_NOT_FOUND_ERROR_MESSAGE));
         } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, AuthorController.AUTHOR_NOT_FOUND_ERROR_MESSAGE);
         }
 
         return "redirect:/books/%d".formatted(updatedBook.getId());
     }
 
-    @GetMapping("/books/{bookId}/remove-author")
+    @GetMapping(BOOKS_REMOVE_AUTHOR_PATH)
     public String removeAuthorFromBookPage(@PathVariable Long bookId,
                                            Model model) {
         Book foundBook = bookService.getBookById(bookId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, BOOK_NOT_FOUND_ERROR_MESSAGE));
         model.addAttribute("book", foundBook);
 
         return "book/remove_author";
     }
 
-    @DeleteMapping("/books/{bookId}/remove-author/{authorId}")
+    @DeleteMapping(BOOKS_REMOVE_AUTHOR_PATH + "/{authorId}")
     public String removeBookFromAuthor(@PathVariable Long authorId,
                                        @PathVariable Long bookId) {
 
         Book updatedBook;
         try {
             updatedBook = bookService.removeAuthorFromBook(bookId, authorId)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found"));
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, BOOK_NOT_FOUND_ERROR_MESSAGE));
         } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, AuthorController.AUTHOR_NOT_FOUND_ERROR_MESSAGE);
         }
 
         return "redirect:/books/%d".formatted(updatedBook.getId());
