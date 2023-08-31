@@ -11,12 +11,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AuthorServiceImplUnitTest {
@@ -44,7 +45,7 @@ class AuthorServiceImplUnitTest {
         Page<Author> resultPage = authorService.getAuthorPage(0);
 
         // then
-        assertThat(resultPage).isEqualTo(expectedPage);
+        assertThat(resultPage).isSameAs(expectedPage);
         verify(authorRepository, times(1)).findAll(any());
     }
 
@@ -58,17 +59,59 @@ class AuthorServiceImplUnitTest {
         Author resultAuthor = authorService.createNewAuthor(getTestAuthor());
 
         // then
-        assertThat(resultAuthor).isEqualTo(expectedAuthor);
+        assertThat(resultAuthor).isSameAs(expectedAuthor);
         verify(authorRepository, times(1)).save(any());
     }
 
-//    @Test
-//    void getAuthorById() {
-//    }
-//
-//    @Test
-//    void updateAuthorById() {
-//    }
+    @Test
+    void should_returnAuthorOptionalFromRepository() {
+        // given
+        final Long AUTHOR_ID = 2137L;
+        Optional<Author> expectedAuthorOptional = Optional.of(getTestAuthor());
+        given(authorRepository.findById(eq(AUTHOR_ID))).willReturn(expectedAuthorOptional);
+
+        // when
+        Optional<Author> resultAuthorOptional = authorService.getAuthorById(AUTHOR_ID);
+
+        // then
+        assertThat(resultAuthorOptional).isSameAs(expectedAuthorOptional);
+        verify(authorRepository, times(1)).findById(eq(AUTHOR_ID));
+    }
+
+    @Test
+    void should_returnUpdatedAuthorOptional_when_authorFound() {
+        // given
+        final Long AUTHOR_ID = 2137L;
+        Optional<Author> authorOptional = Optional.of(getTestAuthor());
+        given(authorRepository.findById(eq(AUTHOR_ID))).willReturn(authorOptional);
+
+        Author expectedAuthor = getTestAuthor();
+        given(authorRepository.save(any())).willReturn(expectedAuthor);
+
+        // when
+        Optional<Author> resultAuthorOptional = authorService.updateAuthorById(getTestAuthor(), AUTHOR_ID);
+
+        // then
+        assertThat(resultAuthorOptional.isPresent()).isTrue();
+        assertThat(resultAuthorOptional.get()).isSameAs(expectedAuthor);
+        verify(authorRepository, times(1)).findById(eq(AUTHOR_ID));
+        verify(authorRepository, times(1)).save(any());
+    }
+
+    @Test
+    void should_returnEmptyOptional_when_authorNotFound() {
+        // given
+        final Long AUTHOR_ID = 2137L;
+        given(authorRepository.findById(eq(AUTHOR_ID))).willReturn(Optional.empty());
+
+        // when
+        Optional<Author> resultAuthorOptional = authorService.updateAuthorById(getTestAuthor(), AUTHOR_ID);
+
+        // then
+        assertThat(resultAuthorOptional.isEmpty()).isTrue();
+        verify(authorRepository, times(1)).findById(eq(AUTHOR_ID));
+        verify(authorRepository, never()).save(any());
+    }
 //
 //    @Test
 //    void deleteAuthorById() {
