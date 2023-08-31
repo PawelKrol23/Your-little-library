@@ -1,7 +1,10 @@
 package com.example.Spring6webapp.services;
 
 import com.example.Spring6webapp.models.author.Author;
+import com.example.Spring6webapp.models.book.Book;
+import com.example.Spring6webapp.models.book.Genre;
 import com.example.Spring6webapp.repositories.AuthorRepository;
+import com.example.Spring6webapp.repositories.BookRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,6 +30,9 @@ class AuthorServiceImplUnitTest {
 
     @Mock
     AuthorRepository authorRepository;
+
+    @Mock
+    BookRepository bookRepository;
 
     @InjectMocks
     AuthorServiceImpl authorService;
@@ -45,10 +52,10 @@ class AuthorServiceImplUnitTest {
         given(authorRepository.findAll(any())).willReturn(expectedPage);
 
         // when
-        final var resultPage = authorService.getAuthorPage(0);
+        final var actualPage = authorService.getAuthorPage(0);
 
         // then
-        assertThat(resultPage).isSameAs(expectedPage);
+        assertThat(actualPage).isSameAs(expectedPage);
         verify(authorRepository, times(1)).findAll(any());
     }
 
@@ -60,10 +67,10 @@ class AuthorServiceImplUnitTest {
         given(authorRepository.save(any())).willReturn(expectedAuthor);
 
         // when
-        final var resultAuthor = authorService.createNewAuthor(getTestAuthor());
+        final var actualAuthor = authorService.createNewAuthor(getTestAuthor());
 
         // then
-        assertThat(resultAuthor).isSameAs(expectedAuthor);
+        assertThat(actualAuthor).isSameAs(expectedAuthor);
         verify(authorRepository, times(1)).save(any());
     }
 
@@ -76,10 +83,10 @@ class AuthorServiceImplUnitTest {
         given(authorRepository.findById(eq(AUTHOR_ID))).willReturn(expectedAuthorOptional);
 
         // when
-        final var resultAuthorOptional = authorService.getAuthorById(AUTHOR_ID);
+        final var actualAuthorOptional = authorService.getAuthorById(AUTHOR_ID);
 
         // then
-        assertThat(resultAuthorOptional).isSameAs(expectedAuthorOptional);
+        assertThat(actualAuthorOptional).isSameAs(expectedAuthorOptional);
         verify(authorRepository, times(1)).findById(eq(AUTHOR_ID));
     }
 
@@ -95,11 +102,11 @@ class AuthorServiceImplUnitTest {
         given(authorRepository.save(any())).willReturn(expectedAuthor);
 
         // when
-        final var resultAuthorOptional = authorService.updateAuthorById(getTestAuthor(), AUTHOR_ID);
+        final var actualAuthorOptional = authorService.updateAuthorById(getTestAuthor(), AUTHOR_ID);
 
         // then
-        assertThat(resultAuthorOptional.isPresent()).isTrue();
-        assertThat(resultAuthorOptional.get()).isSameAs(expectedAuthor);
+        assertThat(actualAuthorOptional.isPresent()).isTrue();
+        assertThat(actualAuthorOptional.get()).isSameAs(expectedAuthor);
         verify(authorRepository, times(1)).findById(eq(AUTHOR_ID));
         verify(authorRepository, times(1)).save(any());
     }
@@ -111,10 +118,10 @@ class AuthorServiceImplUnitTest {
         given(authorRepository.findById(eq(AUTHOR_ID))).willReturn(Optional.empty());
 
         // when
-        final var resultAuthorOptional = authorService.updateAuthorById(getTestAuthor(), AUTHOR_ID);
+        final var actualAuthorOptional = authorService.updateAuthorById(getTestAuthor(), AUTHOR_ID);
 
         // then
-        assertThat(resultAuthorOptional.isEmpty()).isTrue();
+        assertThat(actualAuthorOptional.isEmpty()).isTrue();
         verify(authorRepository, times(1)).findById(eq(AUTHOR_ID));
         verify(authorRepository, never()).save(any());
     }
@@ -148,10 +155,26 @@ class AuthorServiceImplUnitTest {
         verify(authorRepository, times(1)).findById(eq(AUTHOR_ID));
         verify(authorRepository, never()).delete(any());
     }
-//
-//    @Test
-//    void getBooksNotWrittenBy() {
-//    }
+
+    // getBooksNotWrittenBy tests
+    @Test
+    void should_returnBooks() {
+        // given
+        final Author testAuthor = getTestAuthor();
+        final List<Book> expectedBookList = Collections.singletonList(Book.builder()
+                        .title("test")
+                        .genre(Genre.FANTASY)
+                .build());
+        given(bookRepository.findBooksByAuthorsNotContaining(same(testAuthor))).willReturn(expectedBookList);
+
+        // when
+        final var actualBookList = authorService.getBooksNotWrittenBy(testAuthor);
+
+        // then
+        assertThat(actualBookList).isNotNull();
+        assertThat(actualBookList).isSameAs(expectedBookList);
+        verify(bookRepository, times(1)).findBooksByAuthorsNotContaining(same(testAuthor));
+    }
 //
 //    @Test
 //    void addBookToAuthor() {
