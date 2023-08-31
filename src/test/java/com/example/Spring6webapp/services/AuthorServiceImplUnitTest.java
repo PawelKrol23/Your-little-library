@@ -244,7 +244,70 @@ class AuthorServiceImplUnitTest {
         verify(authorRepository, never()).save(any());
     }
 
-//    @Test
-//    void removeBookFromAuthor() {
-//    }
+    // removeBookFromAuthor tests
+    @Test
+    void removeBookFromAuthor_should_returnAuthor_when_authorAndBookFound() {
+        // given
+        final Long ID = 2137L;
+        final Author author = getTestAuthor();
+        final Book book = getTestBook();
+
+        author.getBooks().add(book);
+        book.getAuthors().add(author);
+
+        given(authorRepository.findById(eq(ID))).willReturn(Optional.of(author));
+        given(bookRepository.findById(eq(ID))).willReturn(Optional.of(book));
+        given(bookRepository.save(same(book))).willReturn(book);
+        given(authorRepository.save(same(author))).willReturn(author);
+
+        // when
+        final var actualAuthorOptional = authorService.removeBookFromAuthor(ID, ID);
+
+        // then
+        assertThat(actualAuthorOptional.isPresent()).isTrue();
+        final var actualAuthor = actualAuthorOptional.get();
+        assertThat(actualAuthor.getBooks()).doesNotContain(book);
+        assertThat(book.getAuthors()).doesNotContain(author);
+
+        verify(authorRepository, times(1)).findById(eq(ID));
+        verify(bookRepository, times(1)).findById(eq(ID));
+        verify(bookRepository, times(1)).save(same(book));
+        verify(authorRepository, times(1)).save(same(author));
+    }
+
+    @Test
+    void removeBookFromAuthor_should_returnEmptyOptional_when_authorNotFound() {
+        // given
+        final Long ID = 2137L;
+        given(authorRepository.findById(eq(ID))).willReturn(Optional.empty());
+
+        // when
+        final var actualAuthorOptional = authorService.removeBookFromAuthor(ID, ID);
+
+        // then
+        assertThat(actualAuthorOptional.isEmpty()).isTrue();
+
+        verify(authorRepository, times(1)).findById(eq(ID));
+        verify(bookRepository, never()).findById(eq(ID));
+        verify(bookRepository, never()).save(any());
+        verify(authorRepository, never()).save(any());
+    }
+
+    @Test
+    void removeBookFromAuthor_should_throwError_when_bookNotExists() {
+        // given
+        final Long ID = 2137L;
+        final Author author = getTestAuthor();
+        given(authorRepository.findById(eq(ID))).willReturn(Optional.of(author));
+        given(bookRepository.findById(eq(ID))).willReturn(Optional.empty());
+
+        // when
+        assertThrows(EntityNotFoundException.class, () -> authorService.removeBookFromAuthor(ID, ID));
+
+        // then
+        verify(authorRepository, times(1)).findById(eq(ID));
+        verify(bookRepository, times(1)).findById(eq(ID));
+        verify(bookRepository, never()).save(any());
+        verify(authorRepository, never()).save(any());
+    }
 }
