@@ -19,8 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class BookServiceImplUnitTest {
@@ -65,7 +64,7 @@ class BookServiceImplUnitTest {
 
     // createNewBook tests
     @Test
-    void createNewAuthor_should_returnCreatedAuthor() {
+    void createNewBook_should_returnCreatedBook() {
         // given
         final Book expectedBook = getTestBook();
         given(bookRepository.save(any())).willReturn(expectedBook);
@@ -82,21 +81,53 @@ class BookServiceImplUnitTest {
     @Test
     void getBookById_should_returnBookOptionalFromRepository() {
         // given
-        final Long Book_ID = 2137L;
+        final Long BOOK_ID = 2137L;
         final Optional<Book> expectedBookOptional = Optional.of(getTestBook());
-        given(bookRepository.findById(eq(Book_ID))).willReturn(expectedBookOptional);
+        given(bookRepository.findById(eq(BOOK_ID))).willReturn(expectedBookOptional);
 
         // when
-        final var actualBookOptional = bookService.getBookById(Book_ID);
+        final var actualBookOptional = bookService.getBookById(BOOK_ID);
 
         // then
         assertThat(actualBookOptional).isSameAs(expectedBookOptional);
-        verify(bookRepository, times(1)).findById(eq(Book_ID));
+        verify(bookRepository, times(1)).findById(eq(BOOK_ID));
     }
-//
-//    @Test
-//    void updateBookById() {
-//    }
+
+    // updateBookById tests
+    @Test
+    void updateBookById_should_returnUpdatedBookOptional_when_BookFound() {
+        // given
+        final Long BOOK_ID = 2137L;
+        final Optional<Book> bookOptional = Optional.of(getTestBook());
+        given(bookRepository.findById(eq(BOOK_ID))).willReturn(bookOptional);
+
+        final Book expectedBook = getTestBook();
+        given(bookRepository.save(any())).willReturn(expectedBook);
+
+        // when
+        final var actualBookOptional = bookService.updateBookById(getTestBook(), BOOK_ID);
+
+        // then
+        assertThat(actualBookOptional.isPresent()).isTrue();
+        assertThat(actualBookOptional.get()).isSameAs(expectedBook);
+        verify(bookRepository, times(1)).findById(eq(BOOK_ID));
+        verify(bookRepository, times(1)).save(any());
+    }
+
+    @Test
+    void updateBookById_should_returnEmptyOptional_when_bookNotFound() {
+        // given
+        final Long BOOK_ID = 2137L;
+        given(bookRepository.findById(eq(BOOK_ID))).willReturn(Optional.empty());
+
+        // when
+        final var actualBookOptional = bookService.updateBookById(getTestBook(), BOOK_ID);
+
+        // then
+        assertThat(actualBookOptional.isEmpty()).isTrue();
+        verify(bookRepository, times(1)).findById(eq(BOOK_ID));
+        verify(bookRepository, never()).save(any());
+    }
 //
 //    @Test
 //    void deleteBookById() {
