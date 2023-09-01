@@ -48,7 +48,7 @@ class BookServiceImplUnitTest {
 
     // getBookPage tests
     @Test
-    void getBookPage_should_returnAuthorPage() {
+    void getBookPage_should_returnBookPage() {
         // given
         final PageImpl<Book> expectedPage = new PageImpl<>(Collections.singletonList(getTestBook()));
         given(bookRepository.findAll(any())).willReturn(expectedPage);
@@ -61,31 +61,42 @@ class BookServiceImplUnitTest {
         verify(bookRepository, times(1)).findAll(any());
     }
 
+    // createNewBook tests
     @Test
-    void createNewBook() {
-    }
+    void createNewAuthor_should_returnCreatedAuthor() {
+        // given
+        final Book expectedBook = getTestBook();
+        given(bookRepository.save(any())).willReturn(expectedBook);
 
-    @Test
-    void getBookById() {
-    }
+        // when
+        final var actualBook = bookService.createNewBook(getTestBook());
 
-    @Test
-    void updateBookById() {
+        // then
+        assertThat(actualBook).isSameAs(expectedBook);
+        verify(bookRepository, times(1)).save(any());
     }
-
-    @Test
-    void deleteBookById() {
-    }
-
-    @Test
-    void getAuthorsNotOwningBook() {
-    }
-
-    @Test
-    void addAuthorToBook() {
-    }
-
-    @Test
-    void removeAuthorFromBook() {
-    }
+//
+//    @Test
+//    void getBookById() {
+//    }
+//
+//    @Test
+//    void updateBookById() {
+//    }
+//
+//    @Test
+//    void deleteBookById() {
+//    }
+//
+//    @Test
+//    void getAuthorsNotOwningBook() {
+//    }
+//
+//    @Test
+//    void addAuthorToBook() {
+//    }
+//
+//    @Test
+//    void removeAuthorFromBook() {
+//    }
 }
