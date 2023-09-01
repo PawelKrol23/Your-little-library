@@ -13,9 +13,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -75,10 +77,22 @@ class BookServiceImplUnitTest {
         assertThat(actualBook).isSameAs(expectedBook);
         verify(bookRepository, times(1)).save(any());
     }
-//
-//    @Test
-//    void getBookById() {
-//    }
+
+    // getBookById tests
+    @Test
+    void getBookById_should_returnBookOptionalFromRepository() {
+        // given
+        final Long Book_ID = 2137L;
+        final Optional<Book> expectedBookOptional = Optional.of(getTestBook());
+        given(bookRepository.findById(eq(Book_ID))).willReturn(expectedBookOptional);
+
+        // when
+        final var actualBookOptional = bookService.getBookById(Book_ID);
+
+        // then
+        assertThat(actualBookOptional).isSameAs(expectedBookOptional);
+        verify(bookRepository, times(1)).findById(eq(Book_ID));
+    }
 //
 //    @Test
 //    void updateBookById() {
