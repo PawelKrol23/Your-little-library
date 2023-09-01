@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -148,7 +149,7 @@ class BookServiceImplUnitTest {
     }
 
     @Test
-    void deleteAuthorById_should_throwError_when_authorNotFound() {
+    void deleteBookById_should_throwError_when_bookNotFound() {
         // given
         final Long BOOK_ID = 2137L;
         given(bookRepository.existsById(eq(BOOK_ID))).willReturn(false);
@@ -160,10 +161,23 @@ class BookServiceImplUnitTest {
         verify(bookRepository, times(1)).existsById(eq(BOOK_ID));
         verify(bookRepository, never()).deleteById(eq(BOOK_ID));
     }
-//
-//    @Test
-//    void getAuthorsNotOwningBook() {
-//    }
+
+    // getAuthorsNotOwningBook tests
+    @Test
+    void getAuthorsNotOwningBook_should_returnAuthors() {
+        // given
+        final Book testBook = getTestBook();
+        final List<Author> expectedAuthorList = Collections.singletonList(getTestAuthor());
+        given(authorRepository.findAuthorsByBooksNotContaining(same(testBook))).willReturn(expectedAuthorList);
+
+        // when
+        final var actualBookList = bookService.getAuthorsNotOwningBook(testBook);
+
+        // then
+        assertThat(actualBookList).isNotNull();
+        assertThat(actualBookList).isSameAs(expectedAuthorList);
+        verify(authorRepository, times(1)).findAuthorsByBooksNotContaining(same(testBook));
+    }
 //
 //    @Test
 //    void addAuthorToBook() {
