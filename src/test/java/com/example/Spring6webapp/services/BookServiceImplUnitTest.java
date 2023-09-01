@@ -5,6 +5,7 @@ import com.example.Spring6webapp.models.book.Book;
 import com.example.Spring6webapp.models.book.Genre;
 import com.example.Spring6webapp.repositories.AuthorRepository;
 import com.example.Spring6webapp.repositories.BookRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,6 +17,8 @@ import java.util.Collections;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -128,10 +131,35 @@ class BookServiceImplUnitTest {
         verify(bookRepository, times(1)).findById(eq(BOOK_ID));
         verify(bookRepository, never()).save(any());
     }
-//
-//    @Test
-//    void deleteBookById() {
-//    }
+
+    // deleteBookById tests
+    @Test
+    void deleteBookById_should_notThrowAnything_when_bookFound() {
+        // given
+        final Long BOOK_ID = 2137L;
+        given(bookRepository.existsById(eq(BOOK_ID))).willReturn(true);
+
+        // when
+        assertDoesNotThrow(() -> bookService.deleteBookById(BOOK_ID));
+
+        // then
+        verify(bookRepository, times(1)).existsById(eq(BOOK_ID));
+        verify(bookRepository, times(1)).deleteById(eq(BOOK_ID));
+    }
+
+    @Test
+    void deleteAuthorById_should_throwError_when_authorNotFound() {
+        // given
+        final Long BOOK_ID = 2137L;
+        given(bookRepository.existsById(eq(BOOK_ID))).willReturn(false);
+
+        // when
+        assertThrows(EntityNotFoundException.class, () -> bookService.deleteBookById(BOOK_ID));
+
+        // then
+        verify(bookRepository, times(1)).existsById(eq(BOOK_ID));
+        verify(bookRepository, never()).deleteById(eq(BOOK_ID));
+    }
 //
 //    @Test
 //    void getAuthorsNotOwningBook() {
