@@ -8,6 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -63,6 +66,21 @@ class BookRepositoryTest {
     }
 
     @Test
-    void findAll() {
+    void findAll_should_returnPageOfBooks() {
+        // given
+        final int PAGE_SIZE = 1;
+        Book book1 = getTestBook(), book2 = getTestBook();
+        entityManager.persist(book1);
+        entityManager.persist(book2);
+        PageRequest pageRequest = PageRequest.of(0, PAGE_SIZE, Sort.Direction.DESC, "createdAt");
+
+        // when
+        final Page<Book> actualBookPage = bookRepository.findAll(pageRequest);
+
+        // then
+        assertThat(actualBookPage).isNotNull();
+        assertThat(actualBookPage.getSize()).isEqualTo(PAGE_SIZE);
+        assertThat(actualBookPage).contains(book2);
+        assertThat(actualBookPage).doesNotContain(book1);
     }
 }
