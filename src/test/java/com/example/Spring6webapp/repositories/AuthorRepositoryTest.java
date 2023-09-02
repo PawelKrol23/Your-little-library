@@ -68,17 +68,18 @@ class AuthorRepositoryTest {
     @Test
     void findAll_should_returnPageOfAuthors() {
         // given
+        final int PAGE_SIZE = 1;
         Author author1 = getTestAuthor(), author2 = getTestAuthor();
         entityManager.persist(author1);
         entityManager.persist(author2);
-        PageRequest pageRequest = PageRequest.of(0, 1, Sort.Direction.DESC, "createdAt");
+        PageRequest pageRequest = PageRequest.of(0, PAGE_SIZE, Sort.Direction.DESC, "createdAt");
 
         // when
         final Page<Author> actualAuthorPage = authorRepository.findAll(pageRequest);
 
         // then
         assertThat(actualAuthorPage).isNotNull();
-        assertThat(actualAuthorPage.getSize()).isEqualTo(1);
+        assertThat(actualAuthorPage.getSize()).isEqualTo(PAGE_SIZE);
         assertThat(actualAuthorPage).contains(author2);
         assertThat(actualAuthorPage).doesNotContain(author1);
     }
