@@ -8,6 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -62,7 +65,21 @@ class AuthorRepositoryTest {
         assertThat(actualAuthorList).doesNotContain(author1);
     }
 
-//    @Test
-//    void findAll() {
-//    }
+    @Test
+    void findAll_should_returnPageOfAuthors() {
+        // given
+        Author author1 = getTestAuthor(), author2 = getTestAuthor();
+        entityManager.persist(author1);
+        entityManager.persist(author2);
+        PageRequest pageRequest = PageRequest.of(0, 1, Sort.Direction.DESC, "createdAt");
+
+        // when
+        final Page<Author> actualAuthorPage = authorRepository.findAll(pageRequest);
+
+        // then
+        assertThat(actualAuthorPage).isNotNull();
+        assertThat(actualAuthorPage.getSize()).isEqualTo(1);
+        assertThat(actualAuthorPage).contains(author2);
+        assertThat(actualAuthorPage).doesNotContain(author1);
+    }
 }
