@@ -19,7 +19,7 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -231,8 +231,8 @@ class AuthorControllerUnitTest {
     void deleteAuthorById_should_respondWith404_when_authorNotExists() throws Exception {
         // given
         final Long AUTHOR_ID = 2137L;
-        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Author already not exists"))
-                .when(service)
+        willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Author already not exists"))
+                .given(service)
                 .deleteAuthorById(eq(AUTHOR_ID));
 
         // when & then
