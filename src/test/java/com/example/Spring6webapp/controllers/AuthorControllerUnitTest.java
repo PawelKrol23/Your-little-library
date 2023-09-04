@@ -3,14 +3,13 @@ package com.example.Spring6webapp.controllers;
 import com.example.Spring6webapp.models.author.Author;
 import com.example.Spring6webapp.models.author.Nationality;
 import com.example.Spring6webapp.services.AuthorService;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -231,7 +230,7 @@ class AuthorControllerUnitTest {
     void deleteAuthorById_should_respondWith404_when_authorNotExists() throws Exception {
         // given
         final Long AUTHOR_ID = 2137L;
-        willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Author already not exists"))
+        willThrow(new EntityNotFoundException("No author with such Id"))
                 .given(service)
                 .deleteAuthorById(eq(AUTHOR_ID));
 
@@ -239,10 +238,32 @@ class AuthorControllerUnitTest {
         mockMvc.perform(delete(AuthorController.AUTHORS_EDIT_PATH, AUTHOR_ID))
                 .andExpect(status().isNotFound());
     }
-//
-//    @Test
-//    void addBookToAuthorPage() {
-//    }
+
+    @Test
+    void addBookToAuthorPage_should_returnAddBookView_when_authorExists() throws Exception {
+        // given
+        final Long AUTHOR_ID = 2137L;
+        Author author = getTestAuthor();
+        author.setId(AUTHOR_ID);
+        given(service.getAuthorById(eq(AUTHOR_ID))).willReturn(Optional.of(author));
+
+        // when & then
+        mockMvc.perform(get(AuthorController.AUTHORS_ADD_BOOK_PATH, AUTHOR_ID))
+                .andExpect(status().isOk())
+                .andExpect(view().name("author/add_book"))
+                .andExpect(model().attributeExists("author", "books"));
+    }
+
+    @Test
+    void addBookToAuthorPage_should_respondWith404_when_authorNotExists() throws Exception {
+        // given
+        final Long AUTHOR_ID = 2137L;
+        given(service.getAuthorById(eq(AUTHOR_ID))).willReturn(Optional.empty());
+
+        // when & then
+        mockMvc.perform(get(AuthorController.AUTHORS_ADD_BOOK_PATH, AUTHOR_ID))
+                .andExpect(status().isNotFound());
+    }
 //
 //    @Test
 //    void addBookToAuthor() {
