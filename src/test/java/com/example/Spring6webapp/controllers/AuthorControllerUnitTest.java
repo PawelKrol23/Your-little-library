@@ -10,12 +10,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AuthorController.class)
@@ -32,6 +35,7 @@ class AuthorControllerUnitTest {
                 .firstName("test")
                 .lastName("test")
                 .nationality(Nationality.UNITED_KINGDOM)
+                .dateOfBirth(LocalDate.now())
                 .build();
     }
 
@@ -94,10 +98,42 @@ class AuthorControllerUnitTest {
                 .andExpect(view().name("author/create"))
                 .andExpect(model().attributeExists("author", "nationalities"));
     }
-//
-//    @Test
-//    void createNewAuthor() {
-//    }
+
+    @Test
+    void createNewAuthor_shouldRedirectToAuthorPage_when_authorIsValid() throws Exception {
+        // given
+        final Long AUTHOR_ID = 2137L;
+        Author author = getTestAuthor();
+        author.setId(AUTHOR_ID);
+        given(service.createNewAuthor(any())).willReturn(author);
+
+        // when & then
+        mockMvc.perform(post(AuthorController.AUTHORS_CREATE_PATH)
+                        .param("firstName", author.getFirstName())
+                        .param("lastName", author.getLastName())
+                        .param("dateOfBirth", author.getDateOfBirth().toString())
+                        .param("nationality", author.getNationality().name()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(header().string("Location", AuthorController.AUTHORS_PATH + "/%d".formatted(AUTHOR_ID)));
+    }
+
+    @Test
+    void createNewAuthor_returnAuthorCreateForm_when_authorIsInvalid() throws Exception {
+        // given
+        Author author = getTestAuthor();
+        author.setLastName("E");
+
+        // when & then
+        mockMvc.perform(post(AuthorController.AUTHORS_CREATE_PATH)
+                        .param("firstName", author.getFirstName())
+                        .param("lastName", author.getLastName())
+                        .param("dateOfBirth", author.getDateOfBirth().toString())
+                        .param("nationality", author.getNationality().name()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("author/create"))
+                .andExpect(model().attributeExists("nationalities"))
+                .andExpect(model().hasErrors());
+    }
 //
 //    @Test
 //    void editAuthorForm() {
