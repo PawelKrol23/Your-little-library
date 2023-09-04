@@ -325,8 +325,40 @@ class AuthorControllerUnitTest {
         mockMvc.perform(get(AuthorController.AUTHORS_REMOVE_BOOK_PATH, AUTHOR_ID))
                 .andExpect(status().isNotFound());
     }
-//
-//    @Test
-//    void removeBookFromAuthor() {
-//    }
+
+    @Test
+    void removeBookFromAuthor_should_redirectToAuthorPage_when_authorAndBookExists() throws Exception {
+        // given
+        final Long ID = 2137L;
+        Author author = getTestAuthor();
+        author.setId(ID);
+        given(service.removeBookFromAuthor(eq(ID), eq(ID))).willReturn(Optional.of(author));
+
+        // when & then
+        mockMvc.perform(delete(AuthorController.AUTHORS_REMOVE_BOOK_PATH + "/{bookId}", ID, ID))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(header().string("Location", "/authors/%d".formatted(ID)));
+    }
+
+    @Test
+    void removeBookFromAuthor_should_respondWith404_when_authorNotExists() throws Exception {
+        // given
+        final Long ID = 2137L;
+        given(service.removeBookFromAuthor(eq(ID), eq(ID))).willReturn(Optional.empty());
+
+        // when & then
+        mockMvc.perform(delete(AuthorController.AUTHORS_REMOVE_BOOK_PATH + "/{bookId}", ID, ID))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void removeBookFromAuthor_should_respondWith404_when_bookNotExists() throws Exception {
+        // given
+        final Long ID = 2137L;
+        given(service.removeBookFromAuthor(eq(ID), eq(ID))).willThrow(new EntityNotFoundException("No book with such Id"));
+
+        // when & then
+        mockMvc.perform(delete(AuthorController.AUTHORS_REMOVE_BOOK_PATH + "/{bookId}", ID, ID))
+                .andExpect(status().isNotFound());
+    }
 }
