@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -17,6 +19,7 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -212,10 +215,30 @@ class AuthorControllerUnitTest {
                 .andExpect(model().attributeExists("author", "nationalities"))
                 .andExpect(model().hasErrors());
     }
-//
-//    @Test
-//    void deleteAuthorById() {
-//    }
+
+    @Test
+    void deleteAuthorById_should_returnAuthorsListView_when_authorExists() throws Exception {
+        // given
+        final Long AUTHOR_ID = 2137L;
+
+        // when & then
+        mockMvc.perform(delete(AuthorController.AUTHORS_EDIT_PATH, AUTHOR_ID))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(header().string("Location", AuthorController.AUTHORS_PATH));
+    }
+
+    @Test
+    void deleteAuthorById_should_respondWith404_when_authorNotExists() throws Exception {
+        // given
+        final Long AUTHOR_ID = 2137L;
+        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Author already not exists"))
+                .when(service)
+                .deleteAuthorById(eq(AUTHOR_ID));
+
+        // when & then
+        mockMvc.perform(delete(AuthorController.AUTHORS_EDIT_PATH, AUTHOR_ID))
+                .andExpect(status().isNotFound());
+    }
 //
 //    @Test
 //    void addBookToAuthorPage() {
