@@ -17,8 +17,7 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AuthorController.class)
@@ -160,10 +159,59 @@ class AuthorControllerUnitTest {
         mockMvc.perform(get(AuthorController.AUTHORS_EDIT_PATH, AUTHOR_ID))
                 .andExpect(status().isNotFound());
     }
-//
-//    @Test
-//    void updateAuthorById() {
-//    }
+
+    @Test
+    void updateAuthorById_should_redirectToAuthorPage_when_authorFoundAndIsValid() throws Exception {
+        // given
+        final Long AUTHOR_ID = 2137L;
+        Author author = getTestAuthor();
+        author.setId(AUTHOR_ID);
+        given(service.updateAuthorById(any(), eq(AUTHOR_ID))).willReturn(Optional.of(author));
+
+        // when & then
+        mockMvc.perform(put(AuthorController.AUTHORS_EDIT_PATH, AUTHOR_ID)
+                        .param("firstName", author.getFirstName())
+                        .param("lastName", author.getLastName())
+                        .param("dateOfBirth", author.getDateOfBirth().toString())
+                        .param("nationality", author.getNationality().name()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(header().string("Location", AuthorController.AUTHORS_PATH + "/%d".formatted(AUTHOR_ID)));
+    }
+
+    @Test
+    void updateAuthorById_should_respondWith404_when_authorNotFound() throws Exception {
+        // given
+        final Long AUTHOR_ID = 2137L;
+        Author author = getTestAuthor();
+        given(service.updateAuthorById(any(), eq(AUTHOR_ID))).willReturn(Optional.empty());
+
+        // when & then
+        mockMvc.perform(put(AuthorController.AUTHORS_EDIT_PATH, AUTHOR_ID)
+                        .param("firstName", author.getFirstName())
+                        .param("lastName", author.getLastName())
+                        .param("dateOfBirth", author.getDateOfBirth().toString())
+                        .param("nationality", author.getNationality().name()))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void updateAuthorById_should_returnAuthorEditForm_when_authorFoundAndIsInvalid() throws Exception {
+        // given
+        final Long AUTHOR_ID = 2137L;
+        Author author = getTestAuthor();
+        author.setLastName("E");
+
+        // when & then
+        mockMvc.perform(put(AuthorController.AUTHORS_EDIT_PATH, AUTHOR_ID)
+                        .param("firstName", author.getFirstName())
+                        .param("lastName", author.getLastName())
+                        .param("dateOfBirth", author.getDateOfBirth().toString())
+                        .param("nationality", author.getNationality().name()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("author/edit"))
+                .andExpect(model().attributeExists("author", "nationalities"))
+                .andExpect(model().hasErrors());
+    }
 //
 //    @Test
 //    void deleteAuthorById() {
