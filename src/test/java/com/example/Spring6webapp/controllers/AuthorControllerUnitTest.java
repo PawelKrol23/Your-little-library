@@ -58,9 +58,16 @@ class AuthorControllerUnitTest {
                 .andExpect(status().isNotFound());
     }
 
-//    @Test
-//    void createNewAuthorForm() {
-//    }
+    @Test
+    void createNewAuthorForm_should_returnNewAuthorForm() throws Exception {
+        // given
+
+        // when & then
+        mockMvc.perform(get(AuthorController.AUTHORS_CREATE_PATH))
+                .andExpect(status().isOk())
+                .andExpect(view().name("author/create"))
+                .andExpect(model().attributeExists("author", "nationalities"));
+    }
 //
 //    @Test
 //    void createNewAuthor() {
