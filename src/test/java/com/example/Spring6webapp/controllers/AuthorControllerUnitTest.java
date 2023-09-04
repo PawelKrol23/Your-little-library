@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -55,6 +56,31 @@ class AuthorControllerUnitTest {
 
         // when & then
         mockMvc.perform(get(AuthorController.AUTHORS_PATH))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void getSingleAuthor_should_returnSingleAuthorView_when_authorExists() throws Exception {
+        // given
+        final Long AUTHOR_ID = 2137L;
+        final var author = getTestAuthor();
+        given(service.getAuthorById(eq(AUTHOR_ID))).willReturn(Optional.of(author));
+
+        // when & then
+        mockMvc.perform(get(AuthorController.AUTHORS_PATH + "/%d".formatted(AUTHOR_ID)))
+                .andExpect(status().isOk())
+                .andExpect(view().name("author/single"))
+                .andExpect(model().attributeExists("author"));
+    }
+
+    @Test
+    void getSingleAuthor_should_respondWith404_when_authorNotExists() throws Exception {
+        // given
+        final Long AUTHOR_ID = 2137L;
+        given(service.getAuthorById(eq(AUTHOR_ID))).willReturn(Optional.empty());
+
+        // when & then
+        mockMvc.perform(get(AuthorController.AUTHORS_PATH + "/%d".formatted(AUTHOR_ID)))
                 .andExpect(status().isNotFound());
     }
 
