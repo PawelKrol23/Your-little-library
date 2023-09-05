@@ -289,10 +289,32 @@ class BookControllerUnitTest {
         mockMvc.perform(put(BookController.BOOKS_ADD_AUTHOR_PATH + "/{authorId}", ID, ID))
                 .andExpect(status().isNotFound());
     }
-//
-//    @Test
-//    void removeAuthorFromBookPage() {
-//    }
+
+    @Test
+    void removeAuthorFromBookPage_should_returnRemoveAuthorView_when_bookExists() throws Exception {
+        // given
+        final Long BOOK_ID = 2137L;
+        Book book = getTestBook();
+        book.setId(BOOK_ID);
+        given(service.getBookById(eq(BOOK_ID))).willReturn(Optional.of(book));
+
+        // when & then
+        mockMvc.perform(get(BookController.BOOKS_REMOVE_AUTHOR_PATH, BOOK_ID))
+                .andExpect(status().isOk())
+                .andExpect(view().name("book/remove_author"))
+                .andExpect(model().attributeExists("book"));
+    }
+
+    @Test
+    void removeBookFromAuthorPage_should_respondWith404_when_authorNotExists() throws Exception {
+        // given
+        final Long BOOK_ID = 2137L;
+        given(service.getBookById(eq(BOOK_ID))).willReturn(Optional.empty());
+
+        // when & then
+        mockMvc.perform(get(BookController.BOOKS_REMOVE_AUTHOR_PATH, BOOK_ID))
+                .andExpect(status().isNotFound());
+    }
 //
 //    @Test
 //    void removeBookFromAuthor() {
