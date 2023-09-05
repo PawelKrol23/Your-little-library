@@ -129,10 +129,31 @@ class BookControllerTest {
                 .andExpect(model().attributeExists("genres"))
                 .andExpect(model().hasErrors());
     }
-//
-//    @Test
-//    void editBookForm() {
-//    }
+    @Test
+    void editBookForm_should_returnBookEditForm_when_bookFound() throws Exception {
+        // given
+        final Long BOOK_ID = 2137L;
+        Book book = getTestBook();
+        book.setId(BOOK_ID);
+        given(service.getBookById(eq(BOOK_ID))).willReturn(Optional.of(book));
+
+        // when & then
+        mockMvc.perform(get(BookController.BOOKS_EDIT_PATH, BOOK_ID))
+                .andExpect(status().isOk())
+                .andExpect(view().name("book/edit"))
+                .andExpect(model().attributeExists("book", "genres"));
+    }
+
+    @Test
+    void editBookForm_should_respondWith404_when_bookNotFound() throws Exception {
+        // given
+        final Long BOOK_ID = 2137L;
+        given(service.getBookById(eq(BOOK_ID))).willReturn(Optional.empty());
+
+        // when & then
+        mockMvc.perform(get(BookController.BOOKS_EDIT_PATH, BOOK_ID))
+                .andExpect(status().isNotFound());
+    }
 //
 //    @Test
 //    void updateBookById() {
