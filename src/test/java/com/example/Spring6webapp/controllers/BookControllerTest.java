@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -58,9 +59,30 @@ class BookControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-//    @Test
-//    void getSingleBook() {
-//    }
+    @Test
+    void getSingleBook_should_returnSingleBookView_when_bookExists() throws Exception {
+        // given
+        final Long BOOK_ID = 2137L;
+        final var book = getTestBook();
+        given(service.getBookById(eq(BOOK_ID))).willReturn(Optional.of(book));
+
+        // when & then
+        mockMvc.perform(get(BookController.BOOKS_ID_PATH, BOOK_ID))
+                .andExpect(status().isOk())
+                .andExpect(view().name("book/single"))
+                .andExpect(model().attributeExists("book"));
+    }
+
+    @Test
+    void getSingleBook_should_respondWith404_when_bookNotExists() throws Exception {
+        // given
+        final Long BOOK_ID = 2137L;
+        given(service.getBookById(eq(BOOK_ID))).willReturn(Optional.empty());
+
+        // when & then
+        mockMvc.perform(get(BookController.BOOKS_ID_PATH, BOOK_ID))
+                .andExpect(status().isNotFound());
+    }
 //
 //    @Test
 //    void createNewBookForm() {
