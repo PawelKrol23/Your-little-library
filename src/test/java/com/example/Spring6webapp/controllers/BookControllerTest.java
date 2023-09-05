@@ -1,8 +1,10 @@
 package com.example.Spring6webapp.controllers;
 
+import com.example.Spring6webapp.models.author.Author;
 import com.example.Spring6webapp.models.book.Book;
 import com.example.Spring6webapp.models.book.Genre;
 import com.example.Spring6webapp.services.BookService;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -16,8 +18,8 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.BDDMockito.willThrow;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(BookController.class)
@@ -154,18 +156,104 @@ class BookControllerTest {
         mockMvc.perform(get(BookController.BOOKS_EDIT_PATH, BOOK_ID))
                 .andExpect(status().isNotFound());
     }
-//
-//    @Test
-//    void updateBookById() {
-//    }
-//
-//    @Test
-//    void deleteBookById() {
-//    }
-//
-//    @Test
-//    void addAuthorToBookPage() {
-//    }
+
+    @Test
+    void updateBookById_should_redirectToBookPage_when_bookFoundAndIsValid() throws Exception {
+        // given
+        final Long BOOK_ID = 2137L;
+        Book book = getTestBook();
+        book.setId(BOOK_ID);
+        given(service.updateBookById(any(), eq(BOOK_ID))).willReturn(Optional.of(book));
+
+        // when & then
+        mockMvc.perform(put(BookController.BOOKS_EDIT_PATH, BOOK_ID)
+                        .param("title", book.getTitle())
+                        .param("publicationYear", book.getPublicationYear().toString())
+                        .param("genre", book.getGenre().name()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(header().string("Location", BookController.BOOKS_PATH + "/%d".formatted(BOOK_ID)));
+    }
+
+    @Test
+    void updateBookById_should_respondWith404_when_bookNotFound() throws Exception {
+        // given
+        final Long BOOK_ID = 2137L;
+        Book book = getTestBook();
+        given(service.updateBookById(any(), eq(BOOK_ID))).willReturn(Optional.empty());
+
+        // when & then
+        mockMvc.perform(put(BookController.BOOKS_EDIT_PATH, BOOK_ID)
+                        .param("title", book.getTitle())
+                        .param("publicationYear", book.getPublicationYear().toString())
+                        .param("genre", book.getGenre().name()))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void updateBookById_should_returnBookEditForm_when_bookFoundAndIsInvalid() throws Exception {
+        // given
+        final Long BOOK_ID = 2137L;
+        Book book = getTestBook();
+        book.setTitle("E");
+
+        // when & then
+        mockMvc.perform(put(BookController.BOOKS_EDIT_PATH, BOOK_ID)
+                        .param("title", book.getTitle())
+                        .param("publicationYear", book.getPublicationYear().toString())
+                        .param("genre", book.getGenre().name()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("book/edit"))
+                .andExpect(model().attributeExists("book", "genres"))
+                .andExpect(model().hasErrors());
+    }
+    @Test
+    void deleteBookById_should_returnBookListView_when_bookExists() throws Exception {
+        // given
+        final Long BOOK_ID = 2137L;
+
+        // when & then
+        mockMvc.perform(delete(BookController.BOOKS_EDIT_PATH, BOOK_ID))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(header().string("Location", BookController.BOOKS_PATH));
+    }
+
+    @Test
+    void deleteBookById_should_respondWith404_when_bookNotExists() throws Exception {
+        // given
+        final Long BOOK_ID = 2137L;
+        willThrow(new EntityNotFoundException("No book with such Id"))
+                .given(service)
+                .deleteBookById(eq(BOOK_ID));
+
+        // when & then
+        mockMvc.perform(delete(BookController.BOOKS_EDIT_PATH, BOOK_ID))
+                .andExpect(status().isNotFound());
+    }
+    @Test
+    void addAuthorToBookPage_should_returnAddAuthorView_when_bookExists() throws Exception {
+        // given
+        final Long BOOK_ID = 2137L;
+        Book book = getTestBook();
+        book.setId(BOOK_ID);
+        given(service.getBookById(eq(BOOK_ID))).willReturn(Optional.of(book));
+
+        // when & then
+        mockMvc.perform(get(BookController.BOOKS_ADD_AUTHOR_PATH, BOOK_ID))
+                .andExpect(status().isOk())
+                .andExpect(view().name("book/add_author"))
+                .andExpect(model().attributeExists("book", "authors"));
+    }
+
+    @Test
+    void addAuthorToBookPage_should_respondWith404_when_bookNotExists() throws Exception {
+        // given
+        final Long BOOK_ID = 2137L;
+        given(service.getBookById(eq(BOOK_ID))).willReturn(Optional.empty());
+
+        // when & then
+        mockMvc.perform(get(BookController.BOOKS_ADD_AUTHOR_PATH, BOOK_ID))
+                .andExpect(status().isNotFound());
+    }
 //
 //    @Test
 //    void addBookToAuthor() {
