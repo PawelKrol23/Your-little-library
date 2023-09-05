@@ -306,7 +306,7 @@ class BookControllerUnitTest {
     }
 
     @Test
-    void removeBookFromAuthorPage_should_respondWith404_when_authorNotExists() throws Exception {
+    void removeAuthorFromBookPage_should_respondWith404_when_bookNotExists() throws Exception {
         // given
         final Long BOOK_ID = 2137L;
         given(service.getBookById(eq(BOOK_ID))).willReturn(Optional.empty());
@@ -315,8 +315,40 @@ class BookControllerUnitTest {
         mockMvc.perform(get(BookController.BOOKS_REMOVE_AUTHOR_PATH, BOOK_ID))
                 .andExpect(status().isNotFound());
     }
-//
-//    @Test
-//    void removeBookFromAuthor() {
-//    }
+
+    @Test
+    void removeBookFromAuthor_should_redirectToBookPage_when_authorAndBookExists() throws Exception {
+        // given
+        final Long ID = 2137L;
+        Book book = getTestBook();
+        book.setId(ID);
+        given(service.removeAuthorFromBook(eq(ID), eq(ID))).willReturn(Optional.of(book));
+
+        // when & then
+        mockMvc.perform(delete(BookController.BOOKS_REMOVE_AUTHOR_PATH + "/{authorId}", ID, ID))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(header().string("Location", "/books/%d".formatted(ID)));
+    }
+
+    @Test
+    void removeBookFromAuthor_should_respondWith404_when_bookNotExists() throws Exception {
+        // given
+        final Long ID = 2137L;
+        given(service.removeAuthorFromBook(eq(ID), eq(ID))).willReturn(Optional.empty());
+
+        // when & then
+        mockMvc.perform(delete(BookController.BOOKS_REMOVE_AUTHOR_PATH + "/{authorId}", ID, ID))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void removeBookFromAuthor_should_respondWith404_when_authorNotExists() throws Exception {
+        // given
+        final Long ID = 2137L;
+        given(service.removeAuthorFromBook(eq(ID), eq(ID))).willThrow(new EntityNotFoundException("No author with such Id"));
+
+        // when & then
+        mockMvc.perform(delete(BookController.BOOKS_REMOVE_AUTHOR_PATH + "/{authorId}", ID, ID))
+                .andExpect(status().isNotFound());
+    }
 }
