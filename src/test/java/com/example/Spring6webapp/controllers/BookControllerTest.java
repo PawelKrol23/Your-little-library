@@ -13,9 +13,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Collections;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(BookController.class)
@@ -93,10 +95,40 @@ class BookControllerTest {
                 .andExpect(view().name("book/create"))
                 .andExpect(model().attributeExists("book", "genres"));
     }
-//
-//    @Test
-//    void createNewBook() {
-//    }
+
+    @Test
+    void createNewBook_shouldRedirectToBookPage_when_bookIsValid() throws Exception {
+        // given
+        final Long BOOK_ID = 2137L;
+        Book book = getTestBook();
+        book.setId(BOOK_ID);
+        given(service.createNewBook(any())).willReturn(book);
+
+        // when & then
+        mockMvc.perform(post(BookController.BOOKS_CREATE_PATH)
+                        .param("title", book.getTitle())
+                        .param("publicationYear", book.getPublicationYear().toString())
+                        .param("genre", book.getGenre().name()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(header().string("Location", BookController.BOOKS_PATH + "/%d".formatted(BOOK_ID)));
+    }
+
+    @Test
+    void createNewBook_returnBookCreateForm_when_bookIsInvalid() throws Exception {
+        // given
+        Book book = getTestBook();
+        book.setTitle("E");
+
+        // when & then
+        mockMvc.perform(post(BookController.BOOKS_CREATE_PATH)
+                        .param("title", book.getTitle())
+                        .param("publicationYear", book.getPublicationYear().toString())
+                        .param("genre", book.getGenre().name()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("book/create"))
+                .andExpect(model().attributeExists("genres"))
+                .andExpect(model().hasErrors());
+    }
 //
 //    @Test
 //    void editBookForm() {
