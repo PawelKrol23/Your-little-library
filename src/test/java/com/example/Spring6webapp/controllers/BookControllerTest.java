@@ -1,6 +1,5 @@
 package com.example.Spring6webapp.controllers;
 
-import com.example.Spring6webapp.models.author.Author;
 import com.example.Spring6webapp.models.book.Book;
 import com.example.Spring6webapp.models.book.Genre;
 import com.example.Spring6webapp.services.BookService;
