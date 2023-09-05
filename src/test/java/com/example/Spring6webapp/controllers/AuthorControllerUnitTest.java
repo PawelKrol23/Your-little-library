@@ -300,6 +300,7 @@ class AuthorControllerUnitTest {
         mockMvc.perform(put(AuthorController.AUTHORS_ADD_BOOK_PATH + "/{bookId}", ID, ID))
                 .andExpect(status().isNotFound());
     }
+
     @Test
     void removeBookFromAuthorPage_should_returnRemoveBookView_when_authorExists() throws Exception {
         // given

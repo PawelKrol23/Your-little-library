@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(BookController.class)
-class BookControllerTest {
+class BookControllerUnitTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -253,10 +253,42 @@ class BookControllerTest {
         mockMvc.perform(get(BookController.BOOKS_ADD_AUTHOR_PATH, BOOK_ID))
                 .andExpect(status().isNotFound());
     }
-//
-//    @Test
-//    void addBookToAuthor() {
-//    }
+
+    @Test
+    void addAuthorToBook_should_redirectToBookPage_when_authorAndBookExists() throws Exception {
+        // given
+        final Long ID = 2137L;
+        Book book = getTestBook();
+        book.setId(ID);
+        given(service.addAuthorToBook(eq(ID), eq(ID))).willReturn(Optional.of(book));
+
+        // when & then
+        mockMvc.perform(put(BookController.BOOKS_ADD_AUTHOR_PATH + "/{authorId}", ID, ID))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(header().string("Location", "/books/%d".formatted(ID)));
+    }
+
+    @Test
+    void addBookToAuthor_should_respondWith404_when_authorNotExists() throws Exception {
+        // given
+        final Long ID = 2137L;
+        given(service.addAuthorToBook(eq(ID), eq(ID))).willReturn(Optional.empty());
+
+        // when & then
+        mockMvc.perform(put(BookController.BOOKS_ADD_AUTHOR_PATH + "/{authorId}", ID, ID))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void addBookToAuthor_should_respondWith404_when_bookNotExists() throws Exception {
+        // given
+        final Long ID = 2137L;
+        given(service.addAuthorToBook(eq(ID), eq(ID))).willThrow(new EntityNotFoundException("No author with such Id"));
+
+        // when & then
+        mockMvc.perform(put(BookController.BOOKS_ADD_AUTHOR_PATH + "/{authorId}", ID, ID))
+                .andExpect(status().isNotFound());
+    }
 //
 //    @Test
 //    void removeAuthorFromBookPage() {
