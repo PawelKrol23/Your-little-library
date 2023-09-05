@@ -83,10 +83,16 @@ class BookControllerTest {
         mockMvc.perform(get(BookController.BOOKS_ID_PATH, BOOK_ID))
                 .andExpect(status().isNotFound());
     }
-//
-//    @Test
-//    void createNewBookForm() {
-//    }
+    @Test
+    void createNewBookForm_should_returnNewBookForm() throws Exception {
+        // given
+
+        // when & then
+        mockMvc.perform(get(BookController.BOOKS_CREATE_PATH))
+                .andExpect(status().isOk())
+                .andExpect(view().name("book/create"))
+                .andExpect(model().attributeExists("book", "genres"));
+    }
 //
 //    @Test
 //    void createNewBook() {
