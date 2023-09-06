@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>Spring-6-web-app</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>Spring-6-web-app</name>
-	<description>Simple web application built using Spring 6</description>
+	<artifactId>your-little-library</artifactId>
+	<version>1.0.0</version>
+	<name>your-little-library</name>
+	<description>Simple web application to store books and authors</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
@@ -84,6 +84,15 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>0.43.4</version>
+				<configuration>
+					<verbose>true</verbose>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
