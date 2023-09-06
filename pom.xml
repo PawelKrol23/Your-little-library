@@ -92,6 +92,20 @@
 				<version>0.43.4</version>
 				<configuration>
 					<verbose>true</verbose>
+					<images>
+						<image>
+							<name>globuss23/${project.artifactId}</name>
+							<build>
+								<assembly>
+									<descriptorRef>artifact</descriptorRef>
+								</assembly>
+								<dockerFile>Dockerfile</dockerFile>
+								<tags>
+									<tag>${project.version}</tag>
+								</tags>
+							</build>
+						</image>
+					</images>
 				</configuration>
 			</plugin>
 		</plugins>
