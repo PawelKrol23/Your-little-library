@@ -1,16 +1,15 @@
 <h1 align="center">
   📘 Your little library 👩🏾
 </h1>
-<hr>
+
 
 ## 🔍 About the project
-<hr>
+
 <p>
     Your Little Library is a web application designed to help you manage your collection of books and authors. It allows you to create, organize, and track books and authors with a user-friendly interface.
 </p>
 
 ## 🖥️ Technologies used
-<hr>
 
 - **Spring & Spring MVC** - to set up the web application.
 
@@ -28,8 +27,7 @@
 
 - **Docker** - to create a docker image, so application can be easily run.
 
-## 🐳 Run the app with docker
-<hr>
+## 🐳 Run the application with docker
 
 1. **Download the image**:
 
